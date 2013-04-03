@@ -1,5 +1,5 @@
-function new_count = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_name,project,counter,testing_flag)
-    
+function new_count = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_name,save_directory,counter,testing_flag)
+
     % Save the pattern, populate required fields.
     pattern.Pats        = Pats;
     pattern.x_num       = size(Pats,3);
@@ -14,22 +14,14 @@ function new_count = save_make_panelsV3_pattern(Pats,row_compression,gs_val,patt
     pattern.Panel_map = panel_id_map;
     pattern.BitMapIndex = process_panel_map(pattern);
     
+    % This function takes almost all of the time, and is only needed if we
+    % are loading the patterns to an SD card.
     if ~exist('testing','var') && ~testing_flag
         pattern.data = Make_pattern_vector(pattern);
     end
     
-    % Get the correct target directory
-    switch computer
-        case {'PCWIN','PCWIN64'}
-            root_pattern_dir = 'C:\tethered_flight_arena_code\patterns';
-        case {'MACI64'}
-            root_pattern_dir = '/Users/stephenholtz/tethered_flight_arena_code/patterns';
-        otherwise
-            error('is this linux?')
-    end
-    
     % When writing to SD card for the controller, ordering is important
-    % and alphabetical.
+    % and numero-alphabetical.
     new_count = counter + 1;
     if numel(num2str(counter)) < 2
         count = ['00' num2str(counter)];
@@ -41,11 +33,11 @@ function new_count = save_make_panelsV3_pattern(Pats,row_compression,gs_val,patt
     
     pattern_name = ['Pattern_' count '_' pattern_name];
     
-    if ~isdir(fullfile(root_pattern_dir,project))
-        mkdir(fullfile(root_pattern_dir,project))
+    if ~isdir(save_directory)
+        mkdir(save_directory)
     end
     
-    file_name = fullfile(root_pattern_dir,project,pattern_name);
+    file_name = fullfile(save_directory,pattern_name);
     disp(file_name);
     save(file_name, 'pattern');
 end
