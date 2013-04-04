@@ -117,6 +117,8 @@ function [C,repetition_duration] = overlaid_vel_nulling_and_bilateral_vel_nullin
     C.closed_loop.PosFuncLoc     = 'none';            
     C.closed_loop.PosFuncNameX   = 'none';
     C.closed_loop.PosFuncNameY   = 'none';
+    C.closed_loop.PanelCfgNum    = 1;
+    C.closed_loop.PanelCfgName   = panel_cfgs{1};
     C.closed_loop.Duration       = cl_duration;
     C.closed_loop.Voltage        = 0; % Very important!
     
