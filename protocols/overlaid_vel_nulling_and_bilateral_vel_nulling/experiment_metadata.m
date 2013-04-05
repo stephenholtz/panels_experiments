@@ -20,15 +20,13 @@ metadata.note               = '';
 time = 2;
 switch time 
     case 1
-        metadata.LightCycle = '20_12'; % AM
+        metadata.LightCycle = '19_11'; % 11 AM
     case 2
-        metadata.LightCycle = '01_17'; % PM
+        metadata.LightCycle = '00_16'; %  4 PM
     case 3
-        metadata.LightCycle = '04_20'; % PM
+        metadata.LightCycle = '04_20'; %  8 PM
     case 4
-        metadata.LightCycle = '06_22'; % PM
-    case 5
-        metadata.LightCycle = '17_09'; % AM
+        metadata.LightCycle = '05_21'; %  9 PM
     otherwise
         metadata.LightCycle = '00_00'; % ...
 end

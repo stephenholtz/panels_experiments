@@ -27,17 +27,17 @@ function [C,repetition_duration] = overlaid_vel_nulling_and_bilateral_vel_nullin
     ol_duration = 2;
     cl_duration = 3;
     
-    overlaid_pats = 1:3;
-    bilat_pats = 7:9;
+    overlaid_pats = 4:6;
+    bilat_pats = 10:12;
     
     for pat_type = 1:2
         
         if pat_type == 1
             pats = overlaid_pats;
-            null_speed_func = 2; % the constant side, ccw
-            test_speed_funcs = [3 5 7 9 11]; % the test side, cw
-            test_shift = +1;
-            null_shift = -1;
+            null_speed_func = 1; % the constant side, ccw
+            test_speed_funcs = [4 6 8 10 12]; % the test side, cw
+            test_shift = -1;
+            null_shift = +1;
         else
             pats = bilat_pats;
             null_speed_func = 1; % the constant side, cw
@@ -73,8 +73,8 @@ function [C,repetition_duration] = overlaid_vel_nulling_and_bilateral_vel_nullin
                         
                     elseif sym_pair == 2
                         
-                        C.experiment(cond_num).PatternID        = pat+3; % each pattern ind + 3 is the reverse...
-                        C.experiment(cond_num).PatternName      = patterns{pat+3};
+                        C.experiment(cond_num).PatternID        = pat-3; % each pattern ind + 3 is the reverse...
+                        C.experiment(cond_num).PatternName      = patterns{pat-3};
                         
                         C.experiment(cond_num).PosFunctionX     = [1 test_speed_func+test_shift]; % swapped x and y
                         C.experiment(cond_num).PosFuncNameX     = position_functions{test_speed_func+test_shift};
