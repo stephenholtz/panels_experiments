@@ -33,7 +33,7 @@ for temp_freq = temp_freq_list
             pos_func_samp_freq_name = num2str(pos_func_samp_freq);        
         end
 
-        func_name = ['spat_freq_' num2str(spatial_freq) 'Hz_temp_freq_' temp_freq_name 'Hz_at_SAMP_RATE_' pos_func_samp_freq_name '_dir_' dir];
+        func_name = ['spat_freq_' num2str(spatial_freq*3.75) '_temp_freq_' temp_freq_name 'Hz_at_SAMP_RATE_' pos_func_samp_freq_name '_dir_' dir];
 
         func_iter = save_panels_position_function(save_directory,func_name,func,func_iter);
 
