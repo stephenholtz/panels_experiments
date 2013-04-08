@@ -25,7 +25,7 @@ count = 1;
 
 mid_gs_value = 2;
 high_gs_value = 3;
-low_gs_value = 1;
+low_gs_value = 0;
 dummy_frame = mid_gs_value*ones(32,96);
 
 for stim_type = 1
