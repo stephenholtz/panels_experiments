@@ -33,7 +33,7 @@ test_contrasts = [6 5;...
                   7 4;...
                   8 3;];
 reference_contrast = [7 4];
-mid_gs_value = 6; % the mean value is 5.5, so 5 or 6 is ok?)
+mid_gs_value = 5; % the mean value is 5.5, so 5 or 6 is ok?)
 dummy_frame = mid_gs_value*ones(4,96);
 
 for vnt = 1:2
@@ -106,9 +106,13 @@ for vnt = 1:2
 
                     x_pat(:,blanking_inds,:,:) = zeros([4,64,size(x_pat,3),size(x_pat,4)]);
                     
-                    Pats = x_pat + y_pat;
+                    offset = repmat(mid_gs_value,[size(x_pat,1),size(x_pat,2),size(x_pat,3),size(x_pat,4)]);
                     
-                    Pats(:,[1:4 37:52 85:96],:,:) = repmat(mid_gs_value,[4,32,size(Pats,3),size(Pats,4)]);
+                    Pats = x_pat + y_pat + offset;
+                    
+                    %%%%Changed so that the actual luminance values of the
+                    %%%%overlaid and bilateral are roughly equal...
+                    %%%%Pats(:,[1:4 37:52 85:96],:,:) = repmat(mid_gs_value,[4,32,size(Pats,3),size(Pats,4)]);
 
                 end
                 

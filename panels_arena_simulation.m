@@ -263,20 +263,27 @@ classdef panels_arena_simulation < handle
         
 %-------OUTPUT MEDIA: DIAGRAMS, MOVIES------------------------------------%    
         
-        function cmap = SetColorMap(obj,color_mode)
-            
-            switch color_mode
-                case 'green'
-                    obj.colormap = repmat([0 -1 0],obj.grayscale_val^2,1);
-                case 'red'
-                    obj.colormap = repmat([-1 0 0],obj.grayscale_val^2,1);
-                case 'alien'
-                    obj.colormap = repmat([.1 -1 .5],obj.grayscale_val^2,1);
-            end
-            
-            obj.colormap(obj.colormap == -1) = linspace(0,1,obj.grayscale_val^2)';
-            
-            cmap = obj.colormap;
+        function cmap = SetColorMap(obj,~)
+        %   This was clever, but not needed...
+        %             switch color_mode
+        %                 case 'green'
+        %                     obj.colormap = repmat([0 -1 0],obj.grayscale_val^2,1);
+        %                 case 'red'
+        %                     obj.colormap = repmat([-1 0 0],obj.grayscale_val^2,1);
+        %                 case 'alien'
+        %                     obj.colormap = repmat([.1 -1 .5],obj.grayscale_val^2,1);
+        %             end
+        %             
+        %             obj.colormap(obj.colormap == -1) = linspace(0,1,obj.grayscale_val^2)';
+
+        switch obj.grayscale_val
+            case 1
+                cmap = [0 0 0; 0 1 0];
+            otherwise
+                cmap = [zeros(obj.grayscale_val^2,1), linspace(0,1,obj.grayscale_val^2)', zeros(obj.grayscale_val^2,1)];
+        end
+        
+        obj.colormap = cmap;
             
         end
         
@@ -298,7 +305,8 @@ classdef panels_arena_simulation < handle
             std_handle = figure('Color',[0 0 0],'Colormap',obj.colormap,'Name','Space-Time Diagram','NumberTitle','off');
             
             subplot('Position',[0 0 1 1])
-            imagesc(space_time_mat);
+            colormap(obj.colormap);
+            image(space_time_mat); %imagesc does NOT work properly with the colormap
             axis off
             
         end
