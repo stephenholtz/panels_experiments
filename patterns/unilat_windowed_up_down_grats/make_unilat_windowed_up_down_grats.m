@@ -44,9 +44,9 @@ for stim_type = 1
             elseif stim_loc == 2
                 stim_str = ['center120_' num2str(stripe_size) 'pixbar'];
             elseif stim_loc == 3
-                stim_str = ['left120_' num2str(stripe_size) 'pixbar_' stim_type_name '_' 'right120_blank'];
-            elseif stim_loc == 4
                 stim_str = ['left120_blank' '_' 'right120_' num2str(stripe_size) 'pixbar' '_' stim_type_name];
+            elseif stim_loc == 4
+                stim_str = ['left120_' num2str(stripe_size) 'pixbar_' stim_type_name '_' 'right120_blank'];
             end
             
             if stim_loc == 1
