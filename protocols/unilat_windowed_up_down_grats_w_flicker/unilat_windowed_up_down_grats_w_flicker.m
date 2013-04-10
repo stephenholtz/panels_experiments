@@ -59,44 +59,58 @@ function [C,repetition_duration] = unilat_windowed_up_down_grats_w_flicker
             tmp=regexp(patterns{pat},'\LEFT_','split');
             switch tmp{2}(1:5)
                 case 'blank'
-                    C.experiment(cond_num).PosFunctionX     = [1 blank_func_ind];
-                    C.experiment(cond_num).PosFuncNameX     = position_functions{blank_func_ind};
-                    tmp=regexp(position_functions{blank_func_ind},'\SAMP_RATE_','split');
-                    C.experiment(cond_num).FuncFreqX        = str2double(tmp{2}(1:3));
+                    C.experiment(cond_num).PosFunctionX     = [1 0];
+                    C.experiment(cond_num).PosFuncNameX     = 'none';
+                    C.experiment(cond_num).FuncFreqX        = default_frequency;
+                                        
+                    C.experiment(cond_num).Mode             = [0 4];
+                    C.experiment(cond_num).InitialPosition  = [2 1];
                 case 'flick'
                     C.experiment(cond_num).PosFunctionX     = [1 flicker_pos_funcs(func)];
                     C.experiment(cond_num).PosFuncNameX     = position_functions{flicker_pos_funcs(func)};
                     tmp=regexp(position_functions{flicker_pos_funcs(func)},'\SAMP_RATE_','split');
                     C.experiment(cond_num).FuncFreqX        = str2double(tmp{2}(1:3));
+                    
+                    C.experiment(cond_num).Mode             = [4 4];
+                    C.experiment(cond_num).InitialPosition  = [1 1];                    
                 otherwise
                     C.experiment(cond_num).PosFunctionX     = [1 func];
                     C.experiment(cond_num).PosFuncNameX     = position_functions{func};
                     tmp=regexp(position_functions{func},'\SAMP_RATE_','split');
                     C.experiment(cond_num).FuncFreqX        = str2double(tmp{2}(1:3));
+                    
+                    C.experiment(cond_num).Mode             = [4 4];
+                    C.experiment(cond_num).InitialPosition  = [1 1];
             end
             
             tmp=regexp(patterns{pat},'\RIGHT_','split');
             switch tmp{2}(1:5)
                 case 'blank'
-                    C.experiment(cond_num).PosFunctionY     = [2 blank_func_ind];
-                    C.experiment(cond_num).PosFuncNameY     = position_functions{blank_func_ind};
-                    tmp=regexp(position_functions{blank_func_ind},'\SAMP_RATE_','split');
-                    C.experiment(cond_num).FuncFreqY        = str2double(tmp{2}(1:3));
+                    C.experiment(cond_num).PosFunctionY     = [2 0];
+                    C.experiment(cond_num).PosFuncNameY     = 'none';
+                    C.experiment(cond_num).FuncFreqY        = default_frequency;
+                    
+                    C.experiment(cond_num).Mode             = [0 4];
+                    C.experiment(cond_num).InitialPosition  = [2 1];
                 case 'flick'
                     C.experiment(cond_num).PosFunctionY     = [2 flicker_pos_funcs(func)];
                     C.experiment(cond_num).PosFuncNameY     = position_functions{flicker_pos_funcs(func)};
                     tmp=regexp(position_functions{flicker_pos_funcs(func)},'\SAMP_RATE_','split');
                     C.experiment(cond_num).FuncFreqY        = str2double(tmp{2}(1:3));
+                    
+                    C.experiment(cond_num).Mode             = [4 4];
+                    C.experiment(cond_num).InitialPosition  = [1 1];
                 otherwise
                     C.experiment(cond_num).PosFunctionY     = [2 func];
                     C.experiment(cond_num).PosFuncNameY     = position_functions{func};
                     tmp=regexp(position_functions{func},'\SAMP_RATE_','split');
                     C.experiment(cond_num).FuncFreqY        = str2double(tmp{2}(1:3));
+                    
+                    C.experiment(cond_num).Mode             = [4 4];
+                    C.experiment(cond_num).InitialPosition  = [1 1];
             end
             
             C.experiment(cond_num).Gains            = [0 0 0 0];
-            C.experiment(cond_num).Mode             = [4 4];
-            C.experiment(cond_num).InitialPosition  = [1 1]; % [1 1] are both dummy frames.
             C.experiment(cond_num).Duration         = ol_duration;
             C.experiment(cond_num).note             = '';
             

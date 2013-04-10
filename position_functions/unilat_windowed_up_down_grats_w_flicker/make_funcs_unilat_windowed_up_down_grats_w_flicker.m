@@ -73,7 +73,8 @@ for spat_freq = spatial_freqs
     end
 end
 
-func_name = 'blank_for_dummy_frame_at_SAMP_RATE_001';
-func = 1;
-func_iter = 999;
-func_iter = save_panels_position_function(save_directory,func_name,func,func_iter);
+% This does not work...
+% func_name = 'blank_for_dummy_frame_at_SAMP_RATE_001';
+% func = 1;
+% func_iter = 999;
+% func_iter = save_panels_position_function(save_directory,func_name,func,func_iter);
