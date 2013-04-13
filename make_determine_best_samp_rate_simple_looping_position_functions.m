@@ -27,7 +27,7 @@ if ~exist('dummy_frame_flag','var') && ~dummy_frame_flag
 end
 
 if direction == -1
-    function_vector = fliplr(function_vector);
+    function_vector(step_size+1:end) = fliplr(function_vector(step_size+1:end));
 end
 
 end

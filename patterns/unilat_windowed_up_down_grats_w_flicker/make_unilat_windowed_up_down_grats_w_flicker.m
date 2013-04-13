@@ -146,8 +146,8 @@ for pat_wind = 1:size(pattern_windows,1)
                 end
             end
 
-            Pats = add_dummy_frame_to_pattern(Pats,dummy_frame,'x',1);
-            Pats = add_dummy_frame_to_pattern(Pats,dummy_frame,'y',1);
+            %Pats = add_dummy_frame_to_pattern(Pats,dummy_frame,'x',1);
+            %Pats = add_dummy_frame_to_pattern(Pats,dummy_frame,'y',1);
             
             count = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_str,save_directory,count,testing_flag);
             

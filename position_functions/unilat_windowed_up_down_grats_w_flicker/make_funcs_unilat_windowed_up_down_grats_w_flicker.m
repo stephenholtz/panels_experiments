@@ -1,3 +1,5 @@
+%%%%% REGULAR MODE 0 AND GAINS IS FAR MORE REASONABLE THAN USING A SET
+%%%%% UPDATE FREQUENCY AND THE RESULTING STRANGE SET OF AVAILABLE SPEEDS...
 % Make all of the position functions for the simple looping stimuli
 save_directory = '/Users/stephenholtz/panels_experiments/position_functions/unilat_windowed_up_down_grats_w_flicker';
 

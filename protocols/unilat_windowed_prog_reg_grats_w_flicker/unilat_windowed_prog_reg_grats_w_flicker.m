@@ -1,4 +1,4 @@
-function [C,repetition_duration] = unilat_windowed_up_down_grats_w_flicker
+function [C,repetition_duration] = unilat_windowed_prog_reg_grats_w_flicker
 % C needs fields experiment, closed_loop and initial_alignment
 % 
 % up and down presented unilaterally to see if I can get turning or
@@ -28,83 +28,102 @@ function [C,repetition_duration] = unilat_windowed_up_down_grats_w_flicker
     cl_duration = 2.75;
     
     % position function that makes sure all sitmuli use mode 4 4
-    blank_func_ind = numel(position_functions);
-    flicker_pos_funcs = 13:24;
+    %blank_func_ind = numel(position_functions);
+    %flicker_pos_funcs = 13:24;
+    temp_freqs = [.5 4 8];
     
     for spat_freq_set = 1:4
         
         % Just Flicker
         if spat_freq_set == 1
+            spatial_freq = 8;
             pat_grp = [1 3 15 17];
-            func_grp = 1:2:6;
+            gain_grp = spatial_freq*temp_freqs;
         elseif spat_freq_set == 2
+            spatial_freq = 24;
             pat_grp = [2 4 16 18];
-            func_grp = 1:2:6;
+            gain_grp = spatial_freq*temp_freqs;
         % Flicker + Motion or Just Motion
         elseif spat_freq_set == 3
+            spatial_freq = 8;
             pat_grp = [5:2:11 19:2:25];
-            func_grp = 1:6;
+            gain_grp = [1*(spatial_freq*temp_freqs) -1*(spatial_freq*temp_freqs)];
         elseif spat_freq_set == 4
+            spatial_freq = 24;
             pat_grp = [6:2:12 20:2:26];
-            func_grp = (1:6)+6;
+            gain_grp = [1*(spatial_freq*temp_freqs) -1*(spatial_freq*temp_freqs)];
         end
     
     for pat = pat_grp
-        
-        for func = func_grp
+        for gain = gain_grp
+                
+                C.experiment(cond_num).PatternID        = pat; %#ok<*AGROW>
+                C.experiment(cond_num).PatternName      = patterns{pat};
+                C.experiment(cond_num).Mode             = [0 0];
+                C.experiment(cond_num).InitialPosition  = [1 1];
+                C.experiment(cond_num).PosFunctionX     = [1 0];
+                C.experiment(cond_num).PosFuncNameX     = 'none';
+                C.experiment(cond_num).FuncFreqX        = default_frequency;
+                C.experiment(cond_num).PosFunctionY     = [2 0];
+                C.experiment(cond_num).PosFuncNameY     = 'none';
+                C.experiment(cond_num).FuncFreqY        = default_frequency;
+                C.experiment(cond_num).Gains            = [gain 0 gain 0];
+                C.experiment(cond_num).Duration         = ol_duration;
+                C.experiment(cond_num).note             = '';
+                % Keep track of how long this experiment will be
+                total_ol_dur = total_ol_dur + C.experiment(cond_num).Duration + .02;
 
-            C.experiment(cond_num).PatternID        = pat; %#ok<*AGROW>
-            C.experiment(cond_num).PatternName      = patterns{pat};
+                % Increment the condition number
+                cond_num = cond_num + 1;
 
-            tmp=regexp(patterns{pat},'\LEFT_','split');
-            switch tmp{2}(1:5)
-                case 'blank'
-                    C.experiment(cond_num).PosFunctionX     = [1 blank_func_ind];
-                    C.experiment(cond_num).PosFuncNameX     = position_functions{blank_func_ind};
-                    tmp=regexp(position_functions{blank_func_ind},'\SAMP_RATE_','split');
-                    C.experiment(cond_num).FuncFreqX        = str2double(tmp{2}(1:3));
-                case 'flick'
-                    C.experiment(cond_num).PosFunctionX     = [1 flicker_pos_funcs(func)];
-                    C.experiment(cond_num).PosFuncNameX     = position_functions{flicker_pos_funcs(func)};
-                    tmp=regexp(position_functions{flicker_pos_funcs(func)},'\SAMP_RATE_','split');
-                    C.experiment(cond_num).FuncFreqX        = str2double(tmp{2}(1:3));
-                otherwise
-                    C.experiment(cond_num).PosFunctionX     = [1 func];
-                    C.experiment(cond_num).PosFuncNameX     = position_functions{func};
-                    tmp=regexp(position_functions{func},'\SAMP_RATE_','split');
-                    C.experiment(cond_num).FuncFreqX        = str2double(tmp{2}(1:3));
-            end
-            
-            tmp=regexp(patterns{pat},'\RIGHT_','split');
-            switch tmp{2}(1:5)
-                case 'blank'
-                    C.experiment(cond_num).PosFunctionY     = [2 blank_func_ind];
-                    C.experiment(cond_num).PosFuncNameY     = position_functions{blank_func_ind};
-                    tmp=regexp(position_functions{blank_func_ind},'\SAMP_RATE_','split');
-                    C.experiment(cond_num).FuncFreqY        = str2double(tmp{2}(1:3));
-                case 'flick'
-                    C.experiment(cond_num).PosFunctionY     = [2 flicker_pos_funcs(func)];
-                    C.experiment(cond_num).PosFuncNameY     = position_functions{flicker_pos_funcs(func)};
-                    tmp=regexp(position_functions{flicker_pos_funcs(func)},'\SAMP_RATE_','split');
-                    C.experiment(cond_num).FuncFreqY        = str2double(tmp{2}(1:3));
-                otherwise
-                    C.experiment(cond_num).PosFunctionY     = [2 func];
-                    C.experiment(cond_num).PosFuncNameY     = position_functions{func};
-                    tmp=regexp(position_functions{func},'\SAMP_RATE_','split');
-                    C.experiment(cond_num).FuncFreqY        = str2double(tmp{2}(1:3));
-            end
-            
-            C.experiment(cond_num).Gains            = [0 0 0 0];
-            C.experiment(cond_num).Mode             = [4 4];
-            C.experiment(cond_num).InitialPosition  = [1 1]; % [1 1] are both dummy frames.
-            C.experiment(cond_num).Duration         = ol_duration;
-            C.experiment(cond_num).note             = '';
-            
-            % Keep track of how long this experiment will be
-            total_ol_dur = total_ol_dur + C.experiment(cond_num).Duration + .02;
-
-            % Increment the condition number
-            cond_num = cond_num + 1;
+% Vestigial code, an elegant solution from a more civilized time
+%             tmp=regexp(patterns{pat},'\LEFT_','split');
+%             switch tmp{2}(1:5)
+%                 case 'blank'
+%                     C.experiment(cond_num).PosFunctionX     = [1 0];
+%                     C.experiment(cond_num).PosFuncNameX     = 'none';
+%                     C.experiment(cond_num).FuncFreqX        = default_frequency;
+%                     C.experiment(cond_num).Mode(1)          = 0;
+%                     C.experiment(cond_num).InitialPosition(1)=2;
+%                 case 'flick'
+%                     C.experiment(cond_num).PosFunctionX     = [1 flicker_pos_funcs(func)];
+%                     C.experiment(cond_num).PosFuncNameX     = position_functions{flicker_pos_funcs(func)};
+%                     tmp=regexp(position_functions{flicker_pos_funcs(func)},'\SAMP_RATE_','split');
+%                     C.experiment(cond_num).FuncFreqX        = str2double(tmp{2}(1:3));
+%                     C.experiment(cond_num).Mode(1)          = 4;
+%                     C.experiment(cond_num).InitialPosition(1)=1;
+%                 otherwise
+%                     C.experiment(cond_num).PosFunctionX     = [1 func];
+%                     C.experiment(cond_num).PosFuncNameX     = position_functions{func};
+%                     tmp=regexp(position_functions{func},'\SAMP_RATE_','split');
+%                     C.experiment(cond_num).FuncFreqX        = str2double(tmp{2}(1:3));
+%                     C.experiment(cond_num).Mode(1)          = 4;
+%                     C.experiment(cond_num).InitialPosition(1)=1;
+%             end
+%             
+%             tmp=regexp(patterns{pat},'\RIGHT_','split');
+%             switch tmp{2}(1:5)
+%                 case 'blank'
+%                     C.experiment(cond_num).PosFunctionY     = [2 0];
+%                     C.experiment(cond_num).PosFuncNameY     = 'none';
+%                     C.experiment(cond_num).FuncFreqY        = default_frequency;
+%                     C.experiment(cond_num).Mode(2)          = 0;
+%                     C.experiment(cond_num).InitialPosition(2)=2;
+%                 case 'flick'
+%                     C.experiment(cond_num).PosFunctionY     = [2 flicker_pos_funcs(func)];
+%                     C.experiment(cond_num).PosFuncNameY     = position_functions{flicker_pos_funcs(func)};
+%                     tmp=regexp(position_functions{flicker_pos_funcs(func)},'\SAMP_RATE_','split');
+%                     C.experiment(cond_num).FuncFreqY        = str2double(tmp{2}(1:3));
+%                     C.experiment(cond_num).Mode(2)          = 4;
+%                     C.experiment(cond_num).InitialPosition(2)= 1;
+%                 otherwise
+%                     C.experiment(cond_num).PosFunctionY     = [2 func];
+%                     C.experiment(cond_num).PosFuncNameY     = position_functions{func};
+%                     tmp=regexp(position_functions{func},'\SAMP_RATE_','split');
+%                     C.experiment(cond_num).FuncFreqY        = str2double(tmp{2}(1:3));
+%                     C.experiment(cond_num).Mode(2)          = 4;
+%                     C.experiment(cond_num).InitialPosition(2)= 1;
+%             end
         end
     end
     end
@@ -128,9 +147,9 @@ function [C,repetition_duration] = unilat_windowed_up_down_grats_w_flicker
     
 %===Set up initial_alignment values========================================
     C.initial_alignment = C.closed_loop;
-
+    
 %===Assign voltage values to the experimental conditions===================
-
+    
     encoded_vals = linspace(.1,9.9,numel(C.experiment));
     for cond_num = 1:numel(C.experiment)
         C.experiment(cond_num).Voltage        = encoded_vals(cond_num);

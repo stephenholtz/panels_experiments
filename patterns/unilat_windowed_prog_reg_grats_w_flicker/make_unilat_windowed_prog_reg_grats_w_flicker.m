@@ -4,7 +4,7 @@
 % 
 % Requires the panels matlab code at flypanels.org.
 %
-% make_pats_unilat_windowed_up_down_grats_bars.m Will make gratings of a
+% unilat_windowed_prog_reg_grats_w_flicker.m Will make gratings of a
 % few different spatial frequencies that move up/down in the x and y chans.
 % Stims will be windowed at L and R side for 120 degrees.
 %
@@ -14,10 +14,10 @@
 testing_flag = 0;
 row_compression = 0;
 gs_val = 2; % no need for more gs
-save_directory = '/Users/stephenholtz/panels_experiments/patterns/unilat_windowed_up_down_grats_w_flicker';
+save_directory = '/Users/stephenholtz/panels_experiments/patterns/unilat_windowed_prog_reg_grats_w_flicker';
 
 % The size of the stripes in pixels
-stripe_sizes = [2 8];% 16];
+stripe_sizes = [4 12];
 
 % Counter for iterating the pattern names, set nonzero if appending to 
 % another experiment.
@@ -51,7 +51,7 @@ for pat_wind = 1:size(pattern_windows,1)
     
         for stripe_size = stripe_sizes
         
-        strp_str = [num2str(stripe_size) 'px_horiz'];
+        strp_str = [num2str(stripe_size) 'px_vert'];
         
             l_pat_type = pattern_combinations(pat_comb,1);
             r_pat_type = pattern_combinations(pat_comb,2);
@@ -81,24 +81,35 @@ for pat_wind = 1:size(pattern_windows,1)
                     l_pat = dummy_frame;
                     
                 case 2
-                    l_pat(:,:,1) = repmat(  [high_gs_value*ones(flicker_stripe_size,96); mid_gs_value*ones(flicker_stripe_size,96);...
-                                                low_gs_value*ones(flicker_stripe_size,96); mid_gs_value*ones(flicker_stripe_size,96)],32/(4*flicker_stripe_size),1);
-                    l_pat(:,:,2) = repmat(  [low_gs_value*ones(flicker_stripe_size,96); mid_gs_value*ones(flicker_stripe_size,96);...
-                                                high_gs_value*ones(flicker_stripe_size,96); mid_gs_value*ones(flicker_stripe_size,96)],32/(4*flicker_stripe_size),1);
-                    % Shift everything to be 'centered'
-                    for i = 1:size(l_pat,3)
-                        l_pat(:,:,i,1) = circshift(l_pat(:,:,i,1),-stripe_size/2); %#ok<*SAGROW>
+                    l_pat(:,:,1) = repmat(  [high_gs_value*ones(32,flicker_stripe_size), mid_gs_value*ones(32,flicker_stripe_size),...
+                                                low_gs_value*ones(32,flicker_stripe_size), mid_gs_value*ones(32,flicker_stripe_size)],1,96/(4*flicker_stripe_size));
+                    l_pat(:,:,2) = repmat(  [low_gs_value*ones(32,flicker_stripe_size), mid_gs_value*ones(32,flicker_stripe_size),...
+                                                high_gs_value*ones(32,flicker_stripe_size), mid_gs_value*ones(32,flicker_stripe_size)],1,96/(4*flicker_stripe_size));
+                    if stripe_size == 12
+                        for i = 1:size(l_pat,3)
+                            l_pat(:,:,i,1) = circshift(l_pat(:,:,i,1),[0 -8]); %#ok<*SAGROW>
+                        end 
+                    elseif stripe_size == 4
+                        for i = 1:size(l_pat,3)
+                            l_pat(:,:,i,1) = circshift(l_pat(:,:,i,1),[0 -2]);
+                        end
                     end
                     
                 case 3
-                    base_pat = repmat([low_gs_value*ones(stripe_size,96); high_gs_value*ones(stripe_size,96)],32/(2*stripe_size),1);
+                    base_pat = repmat([low_gs_value*ones(32,stripe_size), high_gs_value*ones(32,stripe_size)],1,96/(2*stripe_size));
 
                     for i = 1:stripe_size*2
-                        l_pat(:,:,i,1) = circshift(base_pat,1-i);
+                        l_pat(:,:,i,1) = circshift(base_pat,[0 i-1]);
                     end
                     % Shift everything to be 'centered'
-                    for i = 1:size(l_pat,3)
-                        l_pat(:,:,i,1) = circshift(l_pat(:,:,i,1),-stripe_size/2);
+                    if stripe_size == 12
+                        for i = 1:size(l_pat,3)
+                            l_pat(:,:,i,1) = circshift(l_pat(:,:,i,1),[0 2]);
+                        end
+                    elseif stripe_size == 4
+                        for i = 1:size(l_pat,3)
+                            l_pat(:,:,i,1) = circshift(l_pat(:,:,i,1),[0 -2]);
+                        end
                     end
                     
             end
@@ -110,26 +121,36 @@ for pat_wind = 1:size(pattern_windows,1)
                     r_pat = dummy_frame;
                     
                 case 2
-                    r_pat(:,:,1) = repmat(  [high_gs_value*ones(flicker_stripe_size,96); mid_gs_value*ones(flicker_stripe_size,96);...
-                                                low_gs_value*ones(flicker_stripe_size,96); mid_gs_value*ones(flicker_stripe_size,96)],32/(4*flicker_stripe_size),1);
-                    r_pat(:,:,2) = repmat(  [low_gs_value*ones(flicker_stripe_size,96); mid_gs_value*ones(flicker_stripe_size,96);...
-                                                high_gs_value*ones(flicker_stripe_size,96); mid_gs_value*ones(flicker_stripe_size,96)],32/(4*flicker_stripe_size),1);
-                    % Shift everything to be 'centered'
-                    for i = 1:size(r_pat,3)
-                        r_pat(:,:,i,1) = circshift(r_pat(:,:,i,1),-stripe_size/2);
+                    r_pat(:,:,1) = repmat(  [high_gs_value*ones(32,flicker_stripe_size), mid_gs_value*ones(32,flicker_stripe_size),...
+                                                low_gs_value*ones(32,flicker_stripe_size), mid_gs_value*ones(32,flicker_stripe_size)],1,96/(4*flicker_stripe_size));
+                    r_pat(:,:,2) = repmat(  [low_gs_value*ones(32,flicker_stripe_size), mid_gs_value*ones(32,flicker_stripe_size),...
+                                                high_gs_value*ones(32,flicker_stripe_size), mid_gs_value*ones(32,flicker_stripe_size)],1,96/(4*flicker_stripe_size));
+                    if stripe_size == 12
+                        for i = 1:size(r_pat,3)
+                            r_pat(:,:,i,1) = circshift(r_pat(:,:,i,1),[0 -10]);
+                        end 
+                    elseif stripe_size == 4
+                        for i = 1:size(r_pat,3)
+                            r_pat(:,:,i,1) = circshift(r_pat(:,:,i,1),[0 6]);
+                        end
                     end
                     
                 case 3
-                    base_pat = repmat([low_gs_value*ones(stripe_size,96); high_gs_value*ones(stripe_size,96)],32/(2*stripe_size),1);
+                    base_pat = repmat([low_gs_value*ones(32,stripe_size), high_gs_value*ones(32,stripe_size)],1,96/(2*stripe_size));
                     
                     for i = 1:stripe_size*2
-                        r_pat(:,:,i,1) = circshift(base_pat,1-i);
+                        r_pat(:,:,i,1) = circshift(base_pat,[0 i-1]);
                     end
                     % Shift everything to be 'centered'
-                    for i = 1:size(r_pat,3)
-                        r_pat(:,:,i,1) = circshift(r_pat(:,:,i,1),-stripe_size/2);
+                    if stripe_size == 12
+                        for i = 1:size(r_pat,3)
+                            r_pat(:,:,i,1) = circshift(r_pat(:,:,i,1),[0 2]);
+                        end
+                    elseif stripe_size == 4
+                        for i = 1:size(r_pat,3)
+                            r_pat(:,:,i,1) = circshift(r_pat(:,:,i,1),[0 -2]);
+                        end
                     end
-                    
             end
             
             Pats = dummy_frame;
@@ -145,9 +166,15 @@ for pat_wind = 1:size(pattern_windows,1)
                     Pats(horiz_cols,right_cols,x,y) = r_pat(horiz_cols,right_cols,y);
                 end
             end
+            
+%             if count
+%                 image(Pats(:,1:88,1,1));
+%                 colormap(hot(4))
+%                 hold all
+%             end
 
-            Pats = add_dummy_frame_to_pattern(Pats,dummy_frame,'x',1);
-            Pats = add_dummy_frame_to_pattern(Pats,dummy_frame,'y',1);
+%            Pats = add_dummy_frame_to_pattern(Pats,dummy_frame,'x',1);
+%            Pats = add_dummy_frame_to_pattern(Pats,dummy_frame,'y',1);
             
             count = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_str,save_directory,count,testing_flag);
             

@@ -93,7 +93,11 @@ classdef panels_arena_simulation < handle
             if exist('pattern','var')
                 obj.pattern = pattern.Pats; %#ok<*PROP,*CPROP>
                 obj.grayscale_val = pattern.gs_val; 
-                obj.row_compression = pattern.row_compression;
+                try
+                    obj.row_compression = pattern.row_compression;
+                catch
+                    obj.row_compression = 0;
+                end
             else
                 error('pattern from condition_struct not found')
             end
@@ -150,7 +154,7 @@ classdef panels_arena_simulation < handle
                     end
                 case 4
                     x_fps = obj.x_func_freq;
-                    x_loop = obj.x_function+1;
+                    x_loop = obj.x_function+obj.initial_pos(1);
                 otherwise
                     error('Unsupported mode')
             end
@@ -167,7 +171,7 @@ classdef panels_arena_simulation < handle
                     
                 case 4
                     y_fps = obj.y_func_freq;
-                    y_loop = obj.y_function+1;
+                    y_loop = obj.y_function+obj.initial_pos(2);
                 otherwise
                     error('Unsupported mode')
             end
@@ -306,7 +310,11 @@ classdef panels_arena_simulation < handle
             
             subplot('Position',[0 0 1 1])
             colormap(obj.colormap);
-            image(space_time_mat); %imagesc does NOT work properly with the colormap
+            if obj.grayscale_val == 1
+                imagesc(space_time_mat); %imagesc does NOT work properly with the colormap
+            else
+                image(space_time_mat); %imagesc does NOT work properly with the colormap
+            end
             axis off
             
         end
@@ -378,7 +386,7 @@ classdef panels_arena_simulation < handle
 
         end            
             
-        function mov_handle = MakeMovie(obj,color_mode,save_file_path)
+        function mov_handle = MakeMovie(obj,color_mode,save_file_path,varargin)
             % Makes a 30 fps video
             obj.SetColorMap(color_mode);
 
@@ -399,17 +407,29 @@ classdef panels_arena_simulation < handle
                 video_mat(:,:,:,iter) = reshaped_frame;
                 iter = iter + 1;
             end
+            
+%            if ~isempty(varargin{1});
+%                 %imwrite(video_mat, obj.colormap, [save_file_path '.gif'], 'DelayTime',0, 'LoopCount',inf);
+%                 [~,folder] = fileparts(save_file_path);
+%                 png_save_path = fullfile(save_file_path,[folder '_png']);
+%                 if ~isdir(png_save_path)
+%                     mkdir(png_save_path)
+%                 end
+%                 for i = 1:size(video_mat,4)
+%                     imwrite(video_mat(:,:,:,i), obj.colormap, fullfile(png_save_path ,['frame_' num2str(i) '.png']));
+%                 end
+%                 mov_handle = png_save_path;
+%             else
+                mov_handle = VideoWriter(save_file_path,'Motion JPEG AVI');
 
-            mov_handle = VideoWriter(save_file_path,'Motion JPEG AVI');
-            
-            set(mov_handle,'Quality',95,'FrameRate',obj.movie_samp_rate);
-            
-            open(mov_handle)
-            
-            writeVideo(mov_handle,video_mat)
-            
-            close(mov_handle)
-            
+                set(mov_handle,'Quality',95,'FrameRate',obj.movie_samp_rate);
+
+                open(mov_handle)
+
+                writeVideo(mov_handle,video_mat)
+
+                close(mov_handle)
+%             end
         end
         
     end
