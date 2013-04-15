@@ -27,7 +27,6 @@ function [C,repetition_duration] = unilat_windowed_up_down_grats
     ol_duration = 2;
     cl_duration = 3;
     
-    
     for spat_freq_set = 1:3
    
         if spat_freq_set == 1
