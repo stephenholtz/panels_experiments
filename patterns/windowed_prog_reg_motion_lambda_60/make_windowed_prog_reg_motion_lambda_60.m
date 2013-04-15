@@ -26,7 +26,7 @@ count = 1;
 mid_gs_value = 2;
 high_gs_value = 3;
 low_gs_value = 0;
-dummy_frame = mid_gs_value*ones(4,96);
+dummy_frame = mid_gs_value*ones(32,96);
 
 % [ x(left)  y(right) ]
 % 1 blank
@@ -44,7 +44,7 @@ pattern_combinations = [1 3;...
                         3 3];
 pattern_combination_str = {'blank','flicker','bars'};
 % {[left][right][horiz]}
-h = [2 3];
+h = [9:(9+16)];
 pattern_windows = {(29:36),(53:60),(h);...          %30-60
                    (21:28),(61:68),(h);...          %60-90
                    (13:20),(69:76),(h);...          %90-120
@@ -108,16 +108,16 @@ for pat_wind = 1:size(pattern_windows,1)
                     l_pat = dummy_frame;
                     
                 case 2
-                    l_pat(:,:,1) = repmat(  [high_gs_value*ones(4,flicker_stripe_size), mid_gs_value*ones(4,flicker_stripe_size),...
-                                                low_gs_value*ones(4,flicker_stripe_size), mid_gs_value*ones(4,flicker_stripe_size)],1,96/(4*flicker_stripe_size));
-                    l_pat(:,:,2) = repmat(  [low_gs_value*ones(4,flicker_stripe_size), mid_gs_value*ones(4,flicker_stripe_size),...
-                                                high_gs_value*ones(4,flicker_stripe_size), mid_gs_value*ones(4,flicker_stripe_size)],1,96/(4*flicker_stripe_size));
+                    l_pat(:,:,1) = repmat(  [high_gs_value*ones(32,flicker_stripe_size), mid_gs_value*ones(32,flicker_stripe_size),...
+                                                low_gs_value*ones(32,flicker_stripe_size), mid_gs_value*ones(32,flicker_stripe_size)],1,96/(4*flicker_stripe_size));
+                    l_pat(:,:,2) = repmat(  [low_gs_value*ones(32,flicker_stripe_size), mid_gs_value*ones(32,flicker_stripe_size),...
+                                                high_gs_value*ones(32,flicker_stripe_size), mid_gs_value*ones(32,flicker_stripe_size)],1,96/(4*flicker_stripe_size));
                     for i = 1:size(l_pat,3)
                         l_pat(:,:,i,1) = circshift(l_pat(:,:,i,1),[0 0]); %#ok<*SAGROW>
                     end 
 
                 case 3
-                    base_pat = repmat([low_gs_value*ones(4,stripe_size), high_gs_value*ones(4,stripe_size)],1,96/(2*stripe_size));
+                    base_pat = repmat([low_gs_value*ones(32,stripe_size), high_gs_value*ones(32,stripe_size)],1,96/(2*stripe_size));
 
                     for i = 1:stripe_size*2
                         l_pat(:,:,i,1) = circshift(base_pat,[0 i-1]);
@@ -135,16 +135,16 @@ for pat_wind = 1:size(pattern_windows,1)
                     r_pat = dummy_frame;
                     
                 case 2
-                    r_pat(:,:,1) = repmat(  [high_gs_value*ones(4,flicker_stripe_size), mid_gs_value*ones(4,flicker_stripe_size),...
-                                                low_gs_value*ones(4,flicker_stripe_size), mid_gs_value*ones(4,flicker_stripe_size)],1,96/(4*flicker_stripe_size));
-                    r_pat(:,:,2) = repmat(  [low_gs_value*ones(4,flicker_stripe_size), mid_gs_value*ones(4,flicker_stripe_size),...
-                                                high_gs_value*ones(4,flicker_stripe_size), mid_gs_value*ones(4,flicker_stripe_size)],1,96/(4*flicker_stripe_size));
+                    r_pat(:,:,1) = repmat(  [high_gs_value*ones(32,flicker_stripe_size), mid_gs_value*ones(32,flicker_stripe_size),...
+                                                low_gs_value*ones(32,flicker_stripe_size), mid_gs_value*ones(32,flicker_stripe_size)],1,96/(4*flicker_stripe_size));
+                    r_pat(:,:,2) = repmat(  [low_gs_value*ones(32,flicker_stripe_size), mid_gs_value*ones(32,flicker_stripe_size),...
+                                                high_gs_value*ones(32,flicker_stripe_size), mid_gs_value*ones(32,flicker_stripe_size)],1,96/(4*flicker_stripe_size));
                     for i = 1:size(r_pat,3)
                         r_pat(:,:,i,1) = circshift(r_pat(:,:,i,1),[0 0]);
                     end 
                     
                 case 3
-                    base_pat = repmat([low_gs_value*ones(4,stripe_size), high_gs_value*ones(4,stripe_size)],1,96/(2*stripe_size));
+                    base_pat = repmat([low_gs_value*ones(32,stripe_size), high_gs_value*ones(32,stripe_size)],1,96/(2*stripe_size));
                     
                     for i = 1:stripe_size*2
                         r_pat(:,:,i,1) = circshift(base_pat,[0 i-1]);
