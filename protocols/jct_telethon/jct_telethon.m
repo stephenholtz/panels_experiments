@@ -1433,7 +1433,7 @@ cond_num = cond_num + 8;
 
 %===Set up closed_loop values==============================================
     C.closed_loop.PatternID      = 1;
-    C.closed_loop.PatternName    = 'Pattern_11_8wide_bothcontrasts_stripes_c49_telethon.mat';
+    C.closed_loop.PatternName    = {'Pattern_11_8wide_bothcontrasts_stripes_c49_telethon.mat'};
     C.closed_loop.Mode           = [1 0];
     C.closed_loop.InitialPosition= [49 1];
     C.closed_loop.Gains          = [-14 0 0 0];

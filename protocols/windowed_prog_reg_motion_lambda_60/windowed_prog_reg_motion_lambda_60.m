@@ -23,7 +23,7 @@ function [C,repetition_duration] = windowed_prog_reg_motion_lambda_60
     total_ol_dur = 0;
     default_frequency = 200;
     ol_duration = 1.5;
-    cl_duration = 2.75;
+    cl_duration = 2.5;
     
     % position function that makes sure all sitmuli use mode 4 4
     %blank_func_ind = numel(position_functions);
