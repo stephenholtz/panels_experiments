@@ -19,5 +19,16 @@ L_38 = 16:25;
 R_38 = 64:73;
 C_38 = 40:49;
 
-arena_inds = @(center,side)([(center/3.75)+44+1,(side/3.75)+44, NaN, numel(((center/3.75)+44+1):((side/3.75)+44))*3.75]);
-arena_inds(30,150);
+arena_inds = @(left,right)([(left/3.75)+44+1,(right/3.75)+44, NaN, numel(((left/3.75)+44+1):((right/3.75)+44))*3.75]);
+% i.e. for windows on either side of the fly (0 is the center)
+% arena_inds(-135,-45)
+% 
+% ans =
+% 
+%      9    32   NaN    90
+% 
+% arena_inds(45,135)
+% 
+% ans =
+% 
+%     57    80   NaN    90
