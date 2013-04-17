@@ -170,7 +170,7 @@ count = [];
     pattern_str = '6px_vert_bar_4_px_horiz_windowed_up_down_grat_closed_loop_interspersal_pat';
 
     % The size of the stripes in pixels
-    vert_stripe_size    = 6;
+    vert_stripe_size    = 8;
     horiz_stripe_size   = 4;
     num_rows            = 32;
     num_cols            = 96;
@@ -244,8 +244,8 @@ count = [];
         inds_eq_1000 = find(frame >= 1000);
         inds_lt_1000 = find(frame < 1000);
 
-        frame(inds_eq_1000) = high_gs_value;
-        frame(inds_lt_1000) = low_gs_value;
+        frame(inds_eq_1000) = low_gs_value;
+        frame(inds_lt_1000) = high_gs_value;
 
         Pats(:,:,x,y) = frame;
 
@@ -265,7 +265,7 @@ count = [];
     pattern_str = '6px_vert_bar_4_px_horiz_windowed_down_up_grat_closed_loop_interspersal_pat';
 
     % The size of the stripes in pixels
-    vert_stripe_size    = 6;
+    vert_stripe_size    = 8;
     horiz_stripe_size   = 4;
     num_rows            = 32;
     num_cols            = 96;
@@ -339,8 +339,8 @@ count = [];
         inds_eq_1000 = find(frame >= 1000);
         inds_lt_1000 = find(frame < 1000);
 
-        frame(inds_eq_1000) = high_gs_value;
-        frame(inds_lt_1000) = low_gs_value;
+        frame(inds_eq_1000) = low_gs_value;
+        frame(inds_lt_1000) = high_gs_value;
 
         Pats(:,:,x,y) = frame;
 
