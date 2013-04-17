@@ -25,9 +25,6 @@ function [C,repetition_duration] = windowed_prog_reg_motion_lambda_60
     ol_duration = 1.5;
     cl_duration = 2.5;
     
-    % position function that makes sure all sitmuli use mode 4 4
-    %blank_func_ind = numel(position_functions);
-    %flicker_pos_funcs = 13:24;
     spatial_freq = 8*2;
     temp_freqs = [.5 4 8 16];
     gain_grp = spatial_freq*temp_freqs;
@@ -50,7 +47,7 @@ function [C,repetition_duration] = windowed_prog_reg_motion_lambda_60
                 C.experiment(cond_num).Duration         = ol_duration;
                 C.experiment(cond_num).note             = '';
                 % Keep track of how long this experiment will be
-                total_ol_dur = total_ol_dur + C.experiment(cond_num).Duration + .02;
+                total_ol_dur = total_ol_dur + C.experiment(cond_num).Duration + .05;
 
                 % Increment the condition number
                 cond_num = cond_num + 1;
@@ -62,7 +59,7 @@ function [C,repetition_duration] = windowed_prog_reg_motion_lambda_60
     C.closed_loop.PatternName    = patterns(numel(patterns));
     C.closed_loop.Mode           = [1 0];
     C.closed_loop.InitialPosition= [49 1];
-    C.closed_loop.Gains          = [-12 0 0 0];
+    C.closed_loop.Gains          = [-14 0 0 0];
     C.closed_loop.PosFunctionX   = [1 0];
     C.closed_loop.PosFunctionY   = [2 0];
     C.closed_loop.FuncFreqY      = default_frequency;
