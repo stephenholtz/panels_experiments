@@ -66,8 +66,8 @@ function [C,repetition_duration] = window_test_prog_reg_sq_wave_motion_4px_8px
     end
     
 %===Set up closed_loop values==============================================
-    C.closed_loop.PatternID   = numel(patterns)-1;
-    C.closed_loop.PatternName = patterns(numel(patterns)-1);
+    C.closed_loop.PatternID   = numel(patterns);
+    C.closed_loop.PatternName = patterns(numel(patterns));
     C.closed_loop.Mode           = [1 0];
     C.closed_loop.InitialPosition= [49 1];
     C.closed_loop.Gains          = [-14 0 0 0];
