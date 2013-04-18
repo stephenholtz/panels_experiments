@@ -56,8 +56,8 @@ function [C,repetition_duration] = unilat_windowed_flicker
     end
     
 %===Set up closed_loop values==============================================
-    C.closed_loop.PatternID   = numel(patterns)-1;
-    C.closed_loop.PatternName = patterns(numel(patterns)-1);
+    C.closed_loop.PatternID   = numel(patterns);
+    C.closed_loop.PatternName = patterns(numel(patterns));
     C.closed_loop.Mode           = [1 0];
     C.closed_loop.InitialPosition= [49 1];
     C.closed_loop.Gains          = [-14 0 0 0];
