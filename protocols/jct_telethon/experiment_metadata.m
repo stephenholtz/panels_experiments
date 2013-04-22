@@ -3,21 +3,21 @@
 % Transgene metadata
 metadata.Line               = 'gmr_48a08ad'; %'gmr_42f06_ae_01';
 metadata.Sex                = 'female'; % 'male' 'female'
-metadata.DoB                = '2_9_13';
+metadata.DoB                = '4_17_13';
 metadata.HeadGlued          = '0'; % '1' '0'
 metadata.Effector           = 'gal80ts_kir21'; % 'gal80ts_kir21' 'gal80ts_tnt'
 metadata.temp_unshift_time  = '0.0.0';% length of time unshifted in days.hours.mins
 metadata.temp_shift_time	= '0.0.0';
 metadata.temp_unshifted     = 25;
 metadata.temp_shifted       = 25;
-metadata.temp_experiment    = 20.1;
+metadata.temp_experiment    = 20;
 metadata.temp_ambient       = metadata.temp_experiment;
-metadata.humidity_ambient   = 60.2;
+metadata.humidity_ambient   = 60;
 metadata.fly_tag            = '';
-metadata.note               = '';
+metadata.note               = 'jct_telethon is shorter than the normal one';
 
 % Prevents me from messing up the light cycles, kinda.
-time = 2;
+time = 1;
 switch time 
     case 1
         metadata.LightCycle = '19_11'; % 11 AM

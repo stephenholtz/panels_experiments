@@ -25,7 +25,7 @@ cond_num = 1;
 total_ol_dur = 0;
 default_frequency = 50;
 ol_duration = 2.5;
-cl_duration = 3;
+cl_duration = 2.5;
 
 % from telethon_vel_nulling_conditions_9_14
 % These are all of the velocity nulling conditions (30 of them)
