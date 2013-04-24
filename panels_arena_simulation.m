@@ -375,10 +375,10 @@ classdef panels_arena_simulation < handle
 
         end            
 
-        function frames_folder = ExportFramesAsImages(obj,frames_folder,save_file_path)        
+        function MakeSaveAnimatedGif(obj,save_file_path)        
             
             % Makes a 30 fps sampling
-            obj.SetColorMap(color_mode);
+            obj.SetColorMap('green');
 
             samp_from_full_res_rate = ceil(obj.arena_display_clock/obj.movie_samp_rate);
             
@@ -386,17 +386,24 @@ classdef panels_arena_simulation < handle
             
             video_mat = zeros(obj.small_arena_movie_scale_factor*obj.num_arena_rows,...
                 obj.small_arena_movie_scale_factor*numel(obj.small_arena_cols),3,numel(inds_to_use));
-                        
+            
+            iter = 1;
+            
             for ind = inds_to_use
                 % Do a reshape on each frame
                 rgb_frame = ind2rgb(obj.stim_frames(:,obj.small_arena_cols,ind),obj.colormap);
-                reshaped_frame = imresize(rgb_frame,obj.small_arena_movie_scale_factor,'nearest');            
-                frames_folder = fullfile(save_file_path,frames_folder);
-                if ~isdir(frames_folder)
-                    mkdir(frames_folder)
-                end
-                imwrite(reshaped_frame, obj.colormap, fullfile(frames_folder,['frame_' num2str(i) '.png']),'DelayTime',0,'LoopCount',inf);
+                reshaped_frame = imresize(rgb_frame,obj.small_arena_movie_scale_factor,'nearest');
+                
+                video_mat(:,:,:,iter) = reshaped_frame;
+                iter = iter + 1;
             end
+            
+            %imwrite(video_mat, obj.colormap, [save_file_path '.gif'], 'DelayTime',0, 'LoopCount',inf);
+            if ~isdir(save_file_path)
+                mkdir(save_file_path)
+            end
+
+            imwrite(video_mat, obj.colormap, [save_file_path '.gif'],'DelayTime',0,'LoopCount',inf);
             
         end
         
