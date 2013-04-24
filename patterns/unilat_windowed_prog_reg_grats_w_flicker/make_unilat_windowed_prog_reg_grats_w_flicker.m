@@ -11,7 +11,7 @@
 % SLH - 2013
 
 % Save time while testing.
-testing_flag = 0;
+testing_flag = 1;
 row_compression = 0;
 gs_val = 2; % no need for more gs
 save_directory = '/Users/stephenholtz/panels_experiments/patterns/unilat_windowed_prog_reg_grats_w_flicker';

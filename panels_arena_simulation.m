@@ -268,17 +268,6 @@ classdef panels_arena_simulation < handle
 %-------OUTPUT MEDIA: DIAGRAMS, MOVIES------------------------------------%    
         
         function cmap = SetColorMap(obj,~)
-        %   This was clever, but not needed...
-        %             switch color_mode
-        %                 case 'green'
-        %                     obj.colormap = repmat([0 -1 0],obj.grayscale_val^2,1);
-        %                 case 'red'
-        %                     obj.colormap = repmat([-1 0 0],obj.grayscale_val^2,1);
-        %                 case 'alien'
-        %                     obj.colormap = repmat([.1 -1 .5],obj.grayscale_val^2,1);
-        %             end
-        %             
-        %             obj.colormap(obj.colormap == -1) = linspace(0,1,obj.grayscale_val^2)';
 
         switch obj.grayscale_val
             case 1
@@ -385,7 +374,32 @@ classdef panels_arena_simulation < handle
             annotation(params_handle,'Textbox',[0 0 1 1],'String',figure_text,'Edgecolor','None','Interpreter','none')
 
         end            
+
+        function frames_folder = ExportFramesAsImages(obj,frames_folder,save_file_path)        
             
+            % Makes a 30 fps sampling
+            obj.SetColorMap(color_mode);
+
+            samp_from_full_res_rate = ceil(obj.arena_display_clock/obj.movie_samp_rate);
+            
+            inds_to_use = 1:samp_from_full_res_rate:size(obj.stim_frames,3);
+            
+            video_mat = zeros(obj.small_arena_movie_scale_factor*obj.num_arena_rows,...
+                obj.small_arena_movie_scale_factor*numel(obj.small_arena_cols),3,numel(inds_to_use));
+                        
+            for ind = inds_to_use
+                % Do a reshape on each frame
+                rgb_frame = ind2rgb(obj.stim_frames(:,obj.small_arena_cols,ind),obj.colormap);
+                reshaped_frame = imresize(rgb_frame,obj.small_arena_movie_scale_factor,'nearest');            
+                frames_folder = fullfile(save_file_path,frames_folder);
+                if ~isdir(frames_folder)
+                    mkdir(frames_folder)
+                end
+                imwrite(reshaped_frame, obj.colormap, fullfile(frames_folder,['frame_' num2str(i) '.png']),'DelayTime',0,'LoopCount',inf);
+            end
+            
+        end
+        
         function mov_handle = MakeMovie(obj,color_mode,save_file_path,varargin)
             % Makes a 30 fps video
             obj.SetColorMap(color_mode);
@@ -407,29 +421,17 @@ classdef panels_arena_simulation < handle
                 video_mat(:,:,:,iter) = reshaped_frame;
                 iter = iter + 1;
             end
+
+            mov_handle = VideoWriter(save_file_path,'Motion JPEG AVI');
+
+            set(mov_handle,'Quality',95,'FrameRate',obj.movie_samp_rate);
+
+            open(mov_handle)
+
+            writeVideo(mov_handle,video_mat)
+
+            close(mov_handle)
             
-%            if ~isempty(varargin{1});
-%                 %imwrite(video_mat, obj.colormap, [save_file_path '.gif'], 'DelayTime',0, 'LoopCount',inf);
-%                 [~,folder] = fileparts(save_file_path);
-%                 png_save_path = fullfile(save_file_path,[folder '_png']);
-%                 if ~isdir(png_save_path)
-%                     mkdir(png_save_path)
-%                 end
-%                 for i = 1:size(video_mat,4)
-%                     imwrite(video_mat(:,:,:,i), obj.colormap, fullfile(png_save_path ,['frame_' num2str(i) '.png']));
-%                 end
-%                 mov_handle = png_save_path;
-%             else
-                mov_handle = VideoWriter(save_file_path,'Motion JPEG AVI');
-
-                set(mov_handle,'Quality',95,'FrameRate',obj.movie_samp_rate);
-
-                open(mov_handle)
-
-                writeVideo(mov_handle,video_mat)
-
-                close(mov_handle)
-%             end
         end
         
     end

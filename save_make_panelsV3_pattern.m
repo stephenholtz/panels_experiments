@@ -1,5 +1,7 @@
 function new_count = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_name,save_directory,counter,testing_flag)
 
+    pad_num2str_w_zeros = @(num,num_zeros)([repmat('0',1,num_zeros - numel(num2str(num))) num2str(num)]);
+
     % Save the pattern, populate required fields.
     pattern.Pats        = Pats;
     pattern.x_num       = size(Pats,3);
@@ -23,13 +25,7 @@ function new_count = save_make_panelsV3_pattern(Pats,row_compression,gs_val,patt
     % When writing to SD card for the controller, ordering is important
     % and numero-alphabetical.
     new_count = counter + 1;
-    if numel(num2str(counter)) < 2
-        count = ['00' num2str(counter)];
-    elseif numel(num2str(counter)) < 3
-        count = ['0' num2str(counter)];        
-    else
-        count = num2str(counter);        
-    end
+    count = pad_num2str_w_zeros(counter,3);
     
     pattern_name = ['Pattern_' count '_' pattern_name];
     

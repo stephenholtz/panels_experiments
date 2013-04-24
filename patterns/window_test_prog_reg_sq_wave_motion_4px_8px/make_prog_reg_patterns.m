@@ -52,13 +52,13 @@ pattern_windows = {(21:36),(53:68),(rows_used);...  % 30-90
 
 % The amount that the [left,right] windowed patterns need to be shifted
 % (cw) to be symmetrical
-pattern_window_shift{4} =  [-2,-2;...          %30-90
+pattern_window_shift{4} =  [-2,-2;...        %30-90
                             2,2;...          %45-105
                             2,2;...          %30-120
                             2,2];            %45-135
 pattern_window_shift{8} =  [0,0;...          %30-90
-                            -4,4;...          %45-105
-                            12,4;...          %30-120
+                            -4,4;...         %45-105
+                            12,4;...         %30-120
                             8,8];            %45-135
 pattern_window_str = {  '30to90',...
                         '45to105',...

@@ -8,7 +8,7 @@ function [function_vector,min_pos_func_sample_rate] = make_determine_best_samp_r
 fps = temporal_freq*spatial_freq;
 
 % find the minimum sampling rate to make the loop work
-range_samp_rates = 1:500;
+range_samp_rates = 1:1000;
 potential_step_sizes = (1/fps)*range_samp_rates;
 min_pos_func_sample_rate = min(range_samp_rates((round(potential_step_sizes)==potential_step_sizes)));
 step_size = (1/fps)*min_pos_func_sample_rate;
