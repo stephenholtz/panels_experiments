@@ -35,8 +35,6 @@ function [C,repetition_duration] = sf_sweep_prog_reg_w_flk
     % cond_str_r{2} = right side string for ccw condition
     % cond_dir{1} = the x position direction for the cw condition
     % cond_dir{2} = the x position direction for the ccw condition
-    %
-    % ....
     
     for stim_type = 1:4
         clear cond_str_* cond_dirs
@@ -124,7 +122,7 @@ function [C,repetition_duration] = sf_sweep_prog_reg_w_flk
                     if numel(pat_num) ~=1
                         error('not found')
                     end
-                    
+                    C.experiment(cond_num).DisplayType      = 'panels';
                     C.experiment(cond_num).PatternID        = pat_num; %#ok<*AGROW>
                     C.experiment(cond_num).PatternName      = patterns{pat_num};
                     C.experiment(cond_num).Mode             = [4 0];
@@ -160,6 +158,7 @@ function [C,repetition_duration] = sf_sweep_prog_reg_w_flk
     end
 
 %===Set up closed_loop values==============================================
+    C.closed_loop.DisplayType = 'controller';    
     C.closed_loop.PatternID   = numel(patterns);
     C.closed_loop.PatternName = patterns(numel(patterns));
     C.closed_loop.Mode           = [1 0];
