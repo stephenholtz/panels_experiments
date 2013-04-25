@@ -66,7 +66,7 @@ function [C,repetition_duration] = sf_sweep_up_down_w_flk
                 
                 cond_str_l{2} = 'h_grt';
                 cond_str_r{2} = 'blank';
-                cond_dirs{2} = 'neg';
+                cond_dirs{2} = 'pos';
                 
                 cond_str_l{3} = 'blank';
                 cond_str_r{3} = 'h_grt';
@@ -74,7 +74,7 @@ function [C,repetition_duration] = sf_sweep_up_down_w_flk
                 
                 cond_str_l{4} = 'h_grt';
                 cond_str_r{4} = 'blank';
-                cond_dirs{4} = 'pos'; 
+                cond_dirs{4} = 'neg'; 
                 
             case 3
                 % Motion and flicker
@@ -87,7 +87,7 @@ function [C,repetition_duration] = sf_sweep_up_down_w_flk
                 
                 cond_str_l{2} = 'h_grt';
                 cond_str_r{2} = 'h_flk';
-                cond_dirs{2} = 'neg';
+                cond_dirs{2} = 'pos';
                 
                 cond_str_l{3} = 'h_flk';
                 cond_str_r{3} = 'h_grt';
@@ -95,7 +95,7 @@ function [C,repetition_duration] = sf_sweep_up_down_w_flk
                 
                 cond_str_l{4} = 'h_grt';
                 cond_str_r{4} = 'h_flk';
-                cond_dirs{4} = 'pos';
+                cond_dirs{4} = 'neg';
                 
             case 4
                 % Bilateral motion
