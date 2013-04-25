@@ -383,26 +383,22 @@ classdef panels_arena_simulation < handle
             samp_from_full_res_rate = ceil(obj.arena_display_clock/obj.movie_samp_rate);
             
             inds_to_use = 1:samp_from_full_res_rate:size(obj.stim_frames,3);
-            
-            video_mat = zeros(obj.small_arena_movie_scale_factor*obj.num_arena_rows,...
-                obj.small_arena_movie_scale_factor*numel(obj.small_arena_cols),3,numel(inds_to_use));
+
+            video_mat = [];
+%             video_mat = zeros(obj.small_arena_movie_scale_factor*obj.num_arena_rows,...
+%                 obj.small_arena_movie_scale_factor*numel(obj.small_arena_cols),3,numel(inds_to_use));
             
             iter = 1;
             
             for ind = inds_to_use
-                % Do a reshape on each frame
-                rgb_frame = ind2rgb(obj.stim_frames(:,obj.small_arena_cols,ind),obj.colormap);
-                reshaped_frame = imresize(rgb_frame,obj.small_arena_movie_scale_factor,'nearest');
-                
+                % Do a reshape on each framema
+                %rgb_frame = ind2rgb(obj.stim_frames(:,obj.small_arena_cols,ind),obj.colormap);
+                %reshaped_frame = imresize(rgb_frame,obj.small_arena_movie_scale_factor,'nearest');
+                reshaped_frame = kron(obj.stim_frames(:,obj.small_arena_cols,ind),ones(obj.small_arena_movie_scale_factor));
                 video_mat(:,:,:,iter) = reshaped_frame;
                 iter = iter + 1;
             end
             
-            %imwrite(video_mat, obj.colormap, [save_file_path '.gif'], 'DelayTime',0, 'LoopCount',inf);
-            if ~isdir(save_file_path)
-                mkdir(save_file_path)
-            end
-
             imwrite(video_mat, obj.colormap, [save_file_path '.gif'],'DelayTime',0,'LoopCount',inf);
             
         end
