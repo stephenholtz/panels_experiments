@@ -7,47 +7,56 @@ sides       = 2; % left and right
 temp_freqs  = 3; % 150, 225, 300 dps
 edges_conds = types*directions*sides*temp_freqs;
 
-% Block scrambled (an average sf = lam)
-directions  = 3; % prog and reg (and full)
-sides       = 2; % left and right
+% Block scrambled (a minimum sf = lam) - DONE
+directions  = 2; % prog and reg
+sides       = 3; % left right both
 temp_freqs  = 3; % 3,6,12
 spat_freqs  = 2; % wavelength 30,60
 block_conds = directions*sides*temp_freqs*spat_freqs;
 
-% Normal + noise - DONE
-noise       = 2; % noise 25%, noise 50%
-directions  = 3; % prog and reg (and full)
+% flicker responses - DONE
 sides       = 2; % left and right
-temp_freqs  = 3; % 3,6,12
-spat_freqs  = 2; % wavelength 30,60
-noise_conds = noise*directions*sides*temp_freqs*spat_freqs;
-
-% Normal , and + tf match flicker - DONE
-directions  = 2; % prog and reg (and full)
-sides       = 2; % left and right
-temp_freqs  = 3; % 3,6,12
-spat_freqs  = 2; % wavelength 30,60
-flicker     = 3; % no flicker, tf matched flicker, and 4*tf flicker
-normal_and_flick_conds = directions*sides*temp_freqs*spat_freqs*flicker;
-
-% Full field responses 
-directions  = 2; % cw,ccw
-temp_freqs  = 3; % 3,6,12
-spat_freqs  = 2; % wavelength 30,60
-norm_full_field_conds = directions*temp_freqs*spat_freqs;
-
-% flicker responses
-sides       = 2; % left and right
-windows     = 2; % very big, and normal
-speeds      = 3; % slopes of triangle wave increase
+windows     = 1; % normal
+speeds      = 4; % slopes of triangle wave increase
 flicker_conds = sides*windows*speeds;
 
-total_conds = edges_conds + block_conds + noise_conds + normal_and_flick_conds + norm_full_field_conds + flicker_conds;
+% rev phi responses - DONE
+directions  = 2; % cw,ccw
+sides       = 3; % left, right, full
+speeds      = 3; % slow speeds: .75,2,5
+spat_freqs  = 1; % lam 60
+rev_phi_conds = sides*speeds*spat_freqs*directions;
+
+% noise and normal conds
+sides = 3;      % full left right
+directions = 2; % +/-
+spat_freqs = 2; % 30 60
+speeds = 3;     % 3,6,12
+noise = 3;      % 0%, 17% and 50%
+noise_normal_conds = sides*directions*spat_freqs*speeds*noise;
+
+% flicker and motion conditions
+sides = 2;      % prog and reg
+directions = 2; % +/-
+spat_freqs = 2; % 30 60
+speeds = 3;     % 3,6,12
+flicker = 2;    % 1hz and 2hz wrt motion period
+flick_mot_conds = sides*directions*spat_freqs*speeds*flicker;
+
+% unilateral flicker conditions
+sides = 2;      % Lr
+directions = 1; % +/-
+spat_freqs = 2; % 30 60
+speeds = 3;     % 3,6,12
+flicker = 2;    % 1hz and 2hz wrt motion period
+flick_only_conds = sides*directions*spat_freqs*speeds*flicker;
+
+total_conds = edges_conds + block_conds + noise_normal_conds + flick_mot_conds + flick_only_conds + flicker_conds + rev_phi_conds;
 
 ol_time = 2; % a good approximate time
-cl_time = 2.25; % probably the minimum needed
+cl_time = 2; % probably the minimum needed
 n_reps = 2;
-exp_time = n_reps*total_conds*(ol_time+cl_time)/60;
+exp_time = n_reps*total_conds*(ol_time+cl_time)/60
 
 %-hours_per_line---------------------------------------------
 
@@ -57,4 +66,4 @@ N_lines = 8;
 N_per_line = 14; % with 2 reps I think this has to be >10
 num_rigs = 3;
 tether_time = 20;
-hours_per_line = ((exp_time * N_per_line) + tether_time) / (num_rigs * 60);
+hours_per_line = ((exp_time * N_per_line) + tether_time) / (num_rigs * 60)

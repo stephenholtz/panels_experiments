@@ -9,7 +9,7 @@
 % Pattern_###_16PxWind_PX_###_LEFT_(h/v_grt/flk,blank)_RIGHT_(...).mat
 
 % Save time while testing.
-testing_flag = 1;
+testing_flag = 0;
 % Use this so conversion to sine wave is easier later (more values)
 gs_val = 3;
 
@@ -32,7 +32,9 @@ num_rows_rc = 4;
 num_cols = 96;
 
 % Counter for iterating the pattern names, set nonzero if appending to another experiment.
-count = 1;
+if ~exist('count','var'); 
+    count = 1;
+end
 
 % Blank frame that is at the beginning of all the patterns (with row compression or not)
 dummy_frame_rc = mid_gs_value*ones(num_rows_rc,96);
@@ -72,10 +74,9 @@ if 1
                 % All edge sweeps go from -142.5 on to +142.5
                 for side = 1:3
                     if side == 1
-                        Pats = dummy_frame_rc;
                         side_str = 'left';
-                        
                         for dir = 1:2
+                            Pats = dummy_frame_rc;
                             if dir == 1
                                 dir_str = 'prog';
                                 for i = 1:numel(left_cols)+1+stripe_size
@@ -91,14 +92,15 @@ if 1
                             end
                             
                             Pats = add_dummy_frame_to_pattern(Pats,dummy_frame_rc,'x',1);
-                            pattern_str = [side_str '_' dir_str '_' pol_str '_' bar_str];
+                            num_frames_str = ['NUM_FRAMES_' pad_num2str_w_zeros(size(Pats,3),3) '_'];
+                            pattern_str = [num_frames_str side_str '_' dir_str '_' pol_str '_' bar_str];
                             count = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_str,save_directory,count,testing_flag);
                             
                         end
                     elseif side == 2
+                        side_str = 'right';
                         for dir = 1:2
                             Pats = dummy_frame_rc;
-                            side_str = 'right';
                             if dir == 1
                                 dir_str = 'prog';
                                 for i = 1:numel(right_cols)+1+stripe_size
@@ -114,9 +116,9 @@ if 1
                             end
                             
                             Pats = add_dummy_frame_to_pattern(Pats,dummy_frame_rc,'x',1);
-                            pattern_str = [side_str '_' dir_str '_' pol_str '_' bar_str];
+                            num_frames_str = ['NUM_FRAMES_' pad_num2str_w_zeros(size(Pats,3),3) '_'];
+                            pattern_str = [num_frames_str side_str '_' dir_str '_' pol_str '_' bar_str];
                             count = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_str,save_directory,count,testing_flag);
-
                         end
                         
                     elseif side == 3
@@ -126,9 +128,9 @@ if 1
                             Pats(:,:,i,1) = dummy_frame_rc;
                             Pats(1:num_rows_rc,full_cols,i) = temp_pat(1:num_rows_rc,full_cols,mod(full_cols(1)-stripe_size-1+i,num_cols));
                         end
-                        
                         Pats = add_dummy_frame_to_pattern(Pats,dummy_frame_rc,'x',1);
-                        pattern_str = [side_str '_' pol_str '_' bar_str];
+                        num_frames_str = ['NUM_FRAMES_' pad_num2str_w_zeros(size(Pats,3),3) '_'];
+                        pattern_str = [num_frames_str side_str '_' pol_str '_' bar_str];
                         count = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_str,save_directory,count,testing_flag);
                     end
                 end
@@ -138,71 +140,75 @@ if 1
                 for i = 1:num_cols+1
                     temp_pat(:,:,i,1) = [pol_1*ones(num_rows_rc,i),pol_2*ones(num_rows_rc,(num_cols+1)-i)];
                 end
-
+                for i = (num_cols+1):(num_cols+1+stripe_size)
+                    temp_pat(:,:,i,1) = temp_pat(:,:,size(temp_pat,3),1);
+                end
                 % All edge sweeps go from -142.5 on to +142.5
                 for side = 1:3
                     if side == 1
-                        Pats = dummy_frame_rc;
                         side_str = 'left';
-                        
                         for dir = 1:2
+                            Pats = dummy_frame_rc;
                             if dir == 1
                                 dir_str = 'prog';
                                 for i = 1:numel(left_cols)+1
                                     Pats(:,:,i,1) = dummy_frame_rc;
                                     Pats(1:num_rows_rc,left_cols,i) = temp_pat(1:num_rows_rc,left_cols,left_cols(end)+1-i);
                                 end
+                                for i = size(Pats,3):(size(Pats,3)+stripe_size)
+                                    Pats(:,:,i,1) = Pats(:,:,size(Pats,3),1);
+                                end                                
                             else
                                 dir_str = 'reg';
                                 for i = 1:numel(left_cols)+1
                                     Pats(:,:,i,1) = dummy_frame_rc;
                                     Pats(1:num_rows_rc,left_cols,i) = temp_pat(1:num_rows_rc,left_cols,mod(left_cols(1)-2+i,num_cols));
                                 end
+                                for i = size(Pats,3):(size(Pats,3)+stripe_size)
+                                    Pats(:,:,i,1) = Pats(:,:,size(Pats,3),1);
+                                end
                             end
-                            
                             Pats = add_dummy_frame_to_pattern(Pats,dummy_frame_rc,'x',1);
-                            pattern_str = [side_str '_' dir_str '_' pol_str '_' bar_str];
+                            num_frames_str = ['NUM_FRAMES_' pad_num2str_w_zeros(size(Pats,3),3) '_'];
+                            pattern_str = [num_frames_str side_str '_' dir_str '_' pol_str '_' bar_str];
                             count = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_str,save_directory,count,testing_flag);
-                            
                         end
                     elseif side == 2
+                        side_str = 'right';
                         for dir = 1:2
                             Pats = dummy_frame_rc;
-                            side_str = 'right';
                             if dir == 1
                                 dir_str = 'prog';
-                                for i = 1:numel(right_cols)+1
+                                for i = 1:numel(right_cols)+1+stripe_size
                                     Pats(:,:,i,1) = dummy_frame_rc;
                                     Pats(1:num_rows_rc,right_cols,i) = temp_pat(1:num_rows_rc,right_cols,right_cols(1)-2+i);
                                 end
                             else
                                 dir_str = 'reg';
-                                for i = 1:numel(right_cols)+1
+                                for i = 1:numel(right_cols)+1+stripe_size
                                     Pats(:,:,i,1) = dummy_frame_rc;
                                     Pats(1:num_rows_rc,right_cols,i) = temp_pat(1:num_rows_rc,right_cols,mod(right_cols(end)+1-i,num_cols));
                                 end
-                            end
-                            
+                            end                            
                             Pats = add_dummy_frame_to_pattern(Pats,dummy_frame_rc,'x',1);
-                            pattern_str = [side_str '_' dir_str '_' pol_str '_' bar_str];
+                            num_frames_str = ['NUM_FRAMES_' pad_num2str_w_zeros(size(Pats,3),3) '_'];
+                            pattern_str = [num_frames_str side_str '_' pol_str '_' bar_str];
                             count = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_str,save_directory,count,testing_flag);
-
                         end
                         
                     elseif side == 3
                         Pats = dummy_frame_rc;
                         side_str = 'full';
-                        for i = 1:numel(full_cols)+1
+                        for i = 1:numel(full_cols)+1+stripe_size
                             Pats(:,:,i,1) = dummy_frame_rc;
                             Pats(1:num_rows_rc,full_cols,i) = temp_pat(1:num_rows_rc,full_cols,mod(full_cols(1)-2+i,num_cols));
                         end
-                        
                         Pats = add_dummy_frame_to_pattern(Pats,dummy_frame_rc,'x',1);
-                        pattern_str = [side_str '_' pol_str '_' bar_str];
+                        num_frames_str = ['NUM_FRAMES_' pad_num2str_w_zeros(size(Pats,3),3) '_'];
+                        pattern_str = [num_frames_str side_str '_' pol_str '_' bar_str];
                         count = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_str,save_directory,count,testing_flag);
                     end
                 end
-
             end
         end
     end

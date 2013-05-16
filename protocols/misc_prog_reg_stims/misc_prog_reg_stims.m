@@ -1,5 +1,5 @@
-function [C,repetition_duration] = sf_sweep_prog_reg_w_flk
-% C needs fields experiment, closed_loop and initial_alignment
+function [C,repetition_duration] = misc_prog_reg_stims
+% C needs fields: experiment, closed_loop and initial_alignment
 %
 
 %===Gather all the contents of the SD card=================================
@@ -17,7 +17,7 @@ function [C,repetition_duration] = sf_sweep_prog_reg_w_flk
     panel_cfgs = {panel_cfgs.name};
     
 %===Make the conditions====================================================
-    pad_num2str_w_zeros = @(num,num_zeros)([repmat('0',1,num_zeros - numel(num2str(num))) num2str(num)]);
+    pad_num2str_w_zeros = @(num,num_zeros)([repmat('0',1,num_zeros - numel(num2str(num))) num2str(num)]); %#ok<*NASGU>
 
     % Start a few variables for below
     cfg_num = 1;
@@ -25,138 +25,210 @@ function [C,repetition_duration] = sf_sweep_prog_reg_w_flk
     cond_num = 1;
     total_ol_dur = 0;
     default_frequency = 50;
-    ol_duration = 1.5;
-    cl_duration = 2.25;
-    
-    % To make symmetrical partner conditions easier to find
-    % cond_str_l{1} = left side string for cw condition
-    % cond_str_l{1} = right side string for cw condition
-    % cond_str_r{2} = left side string for ccw condition
-    % cond_str_r{2} = right side string for ccw condition
-    % cond_dir{1} = the x position direction for the cw condition
-    % cond_dir{2} = the x position direction for the ccw condition
-    
-    for stim_type = 1:4
-        clear cond_str_* cond_dirs
-        
-        % Basically declare all elements of a few for loops in the switch
-        % and then loop through to make the stimuli.
-        switch stim_type
-            case 1
-                % Flicker only
-                tfs = [2 6 18];
-                sfs = [4 16]*2;
-                
-                cond_str_l{1} = 'blank';
-                cond_str_r{1} = 'v_flk';
-                cond_dirs{1} = 'pos';
-                
-                cond_str_l{2} = 'v_flk';
-                cond_str_r{2} = 'blank';
-                cond_dirs{2} = 'pos';
-                
-            case 2
-                % Unilateral Motion only
-                tfs = [2 6 18];
-                sfs = [2 4 6 8 12 16]*2;
-                
-                cond_str_l{1} = 'blank';
-                cond_str_r{1} = 'v_grt';
-                cond_dirs{1} = 'pos';
-                
-                cond_str_l{2} = 'v_grt';
-                cond_str_r{2} = 'blank';
-                cond_dirs{2} = 'neg';
-                
-                cond_str_l{3} = 'v_grt';
-                cond_str_r{3} = 'blank';
-                cond_dirs{3} = 'pos'; 
-                
-                cond_str_l{4} = 'blank';
-                cond_str_r{4} = 'v_grt';
-                cond_dirs{4} = 'neg';               
-                
-            case 3
-                % Motion and flicker
-                tfs = [2 6 18];
-                sfs = [2 4 6 8 12 16]*2;
-                
-                cond_str_l{1} = 'v_flk';
-                cond_str_r{1} = 'v_grt';
-                cond_dirs{1} = 'pos';
-                
-                cond_str_l{2} = 'v_grt';
-                cond_str_r{2} = 'v_flk';
-                cond_dirs{2} = 'neg';
-                
-                cond_str_l{3} = 'v_grt';
-                cond_str_r{3} = 'v_flk';
-                cond_dirs{3} = 'pos';
-                
-                cond_str_l{4} = 'v_flk';
-                cond_str_r{4} = 'v_grt';
-                cond_dirs{4} = 'neg';
-                
-            case 4
-                % Bilateral motion
-                tfs = [2 6 18];
-                sfs = [2 4 6 8 12 16]*2;
-                
-                cond_str_l{1} = 'v_grt';
-                cond_str_r{1} = 'v_grt';
-                cond_dirs{1} = 'pos';
-                
-                cond_str_l{2} = 'v_grt';
-                cond_str_r{2} = 'v_grt';
-                cond_dirs{2} = 'neg';
-                
-        end
-        
-        for sf = sfs
-            for tf = tfs
-                for cond = 1:numel(cond_dirs)
-                    
-                    % Match the pattern
-                    num_px = sf/2;
-                    pat_num = find(cellfun(@(x) strcmp(x([22:26 28:37 39:49]),['PX_' pad_num2str_w_zeros(num_px,2) 'LEFT_' cond_str_l{cond} 'RIGHT_' cond_str_r{cond}]), patterns));
-                    if numel(pat_num) ~=1
-                        error('not found')
-                    end
-                    C.experiment(cond_num).DisplayType      = 'panels';
-                    C.experiment(cond_num).PatternID        = pat_num; %#ok<*AGROW>
-                    C.experiment(cond_num).PatternName      = patterns{pat_num};
-                    C.experiment(cond_num).Mode             = [4 0];
-                    C.experiment(cond_num).InitialPosition  = [1 1];
-                    
-                    % Match the position function
-                    func_num = find(cellfun(@(x) strcmp(x([23:28 30:35 37:43]),['SF_' pad_num2str_w_zeros(sf,3) 'TF_' pad_num2str_w_zeros(tf,3) 'DIR_' cond_dirs{cond}]), position_functions));
-                    if numel(func_num) ~=1
-                        error('not found')
-                    end
-                    
-                    C.experiment(cond_num).PosFunctionX     = [1 func_num];
-                    C.experiment(cond_num).PosFuncNameX     = position_functions{func_num};
-                    tmp=regexp(position_functions{func_num},'\SAMPRATE_','split');
-                    C.experiment(cond_num).FuncFreqX        = str2double(tmp{2}(1:4));
-                    
-                    % Y position function is not useable
-                    C.experiment(cond_num).PosFunctionY     = [2 0];
-                    C.experiment(cond_num).PosFuncNameY     = 'none';
-                    C.experiment(cond_num).FuncFreqY        = default_frequency;
-                    C.experiment(cond_num).Gains            = [0 0 0 0];
-                    C.experiment(cond_num).Duration         = ol_duration;
-                    C.experiment(cond_num).note             = '';
-                    
-                    % Keep track of how long this experiment will be
-                    total_ol_dur = total_ol_dur + C.experiment(cond_num).Duration + .1;
+    ol_duration = 2.0;
+    cl_duration = 2.0;
 
-                    % Increment the condition number
-                    cond_num = cond_num + 1;
-                end
-            end
+    % Edges:
+    for pat_num = 1:20 % all of the edge pattern numbers
+        clear func_nums
+        if sum(pat_num == [5 10 15 20]) 
+            % The full sweeps are longer functions
+            % the + or - in x is needed for cw ccw
+            func_nums = 7:12; 
+            steps_per_pat = 41;
+        else
+            % The prog / reg sweeps are shorter functions
+            % the pattern has prog or reg, so all are + in x
+            func_nums = 1:2:6;
+            steps_per_pat = 83;
+        end
+        for func_num = func_nums % all of the edge speeds (position functions)
+            C.experiment(cond_num).DisplayType      = 'panels';
+            C.experiment(cond_num).PatternID        = pat_num; %#ok<*AGROW>
+            C.experiment(cond_num).PatternName      = patterns{pat_num};
+            C.experiment(cond_num).Mode             = [4 0];
+            C.experiment(cond_num).InitialPosition  = [1 1];
+            C.experiment(cond_num).PosFunctionX     = [1 func_num];
+            C.experiment(cond_num).PosFuncNameX     = position_functions{func_num};
+            tmp=regexp(position_functions{func_num},'\SAMPRATE_','split');
+            C.experiment(cond_num).FuncFreqX        = str2double(tmp{2}(1:4));
+            % Y position function is not useable
+            C.experiment(cond_num).PosFunctionY     = [2 0];
+            C.experiment(cond_num).PosFuncNameY     = 'none';
+            C.experiment(cond_num).FuncFreqY        = default_frequency;
+            C.experiment(cond_num).Gains            = [0 0 0 0];
+            tmp=regexp(position_functions{func_num},'\FPS_','split');
+            fps= str2double(tmp{2}(1:3));
+            C.experiment(cond_num).Duration         = steps_per_pat/fps + .1;
+            C.experiment(cond_num).note             = '';
+            % Keep track of how long this experiment will be
+            total_ol_dur = total_ol_dur + C.experiment(cond_num).Duration + .1;
+            % Increment the condition number
+            cond_num = cond_num + 1;           
         end
     end
 
+    % randomized blocks:
+    for pat_num = 21:26 % all of the edge pattern numbers
+        clear func_nums
+        if (pat_num < 24) 
+            % the '96' patterns are lam 30
+            func_nums = 31:36; 
+        else
+            % the '192' patterns are lam 60 
+            func_nums = 37:42;
+        end
+        for func_num = func_nums % all of the edge speeds (position functions)
+            C.experiment(cond_num).DisplayType      = 'panels';
+            C.experiment(cond_num).PatternID        = pat_num; %#ok<*AGROW>
+            C.experiment(cond_num).PatternName      = patterns{pat_num};
+            C.experiment(cond_num).Mode             = [4 0];
+            C.experiment(cond_num).InitialPosition  = [1 1];
+            C.experiment(cond_num).PosFunctionX     = [1 func_num];
+            C.experiment(cond_num).PosFuncNameX     = position_functions{func_num};
+            tmp=regexp(position_functions{func_num},'\SAMPRATE_','split');
+            C.experiment(cond_num).FuncFreqX        = str2double(tmp{2}(1:4));
+            % Y position function is not useable
+            C.experiment(cond_num).PosFunctionY     = [2 0];
+            C.experiment(cond_num).PosFuncNameY     = 'none';
+            C.experiment(cond_num).FuncFreqY        = default_frequency;
+            C.experiment(cond_num).Gains            = [0 0 0 0];
+            C.experiment(cond_num).Duration         = ol_duration;
+            C.experiment(cond_num).note             = '';
+            % Keep track of how long this experiment will be
+            total_ol_dur = total_ol_dur + C.experiment(cond_num).Duration + .1;
+            % Increment the condition number
+            cond_num = cond_num + 1;           
+        end
+    end
+
+    % triangle wave flicker:
+    for pat_num = [27 28]
+        clear func_nums
+        func_nums = 61:2:68;
+        for func_num = func_nums % all of the edge speeds (position functions)
+            C.experiment(cond_num).DisplayType      = 'panels';
+            C.experiment(cond_num).PatternID        = pat_num; %#ok<*AGROW>
+            C.experiment(cond_num).PatternName      = patterns{pat_num};
+            C.experiment(cond_num).Mode             = [4 0];
+            C.experiment(cond_num).InitialPosition  = [1 1];
+            C.experiment(cond_num).PosFunctionX     = [1 func_num];
+            C.experiment(cond_num).PosFuncNameX     = position_functions{func_num};
+            tmp=regexp(position_functions{func_num},'\SAMPRATE_','split');
+            C.experiment(cond_num).FuncFreqX        = str2double(tmp{2}(1:4));
+            % Y position function is not useable
+            C.experiment(cond_num).PosFunctionY     = [2 0];
+            C.experiment(cond_num).PosFuncNameY     = 'none';
+            C.experiment(cond_num).FuncFreqY        = default_frequency;
+            C.experiment(cond_num).Gains            = [0 0 0 0];
+            C.experiment(cond_num).Duration         = ol_duration;
+            C.experiment(cond_num).note             = '';
+            % Keep track of how long this experiment will be
+            total_ol_dur = total_ol_dur + C.experiment(cond_num).Duration + .1;
+            % Increment the condition number
+            cond_num = cond_num + 1;           
+        end
+    end
+    
+    % for the reverse phi stuff (lower speeds)
+    for pat_num = 54:56
+        clear func_nums
+        tmp=regexp(patterns{pat_num},'\NUM_FRAMES_','split');
+        num_frames = str2double(tmp{2}(1:3))-1;
+        if (pat_num >= 54 || pat_num <= 56)
+            if num_frames == 16
+                % RP 8  pixel stimuli no flicker OK
+                func_nums = 49:54;
+            else
+                error('Func Num Problem!')
+            end
+        else
+            error('Func Num Problem!')
+        end
+        for func_num = func_nums % all of the edge speeds (position functions)
+            C.experiment(cond_num).DisplayType      = 'panels';
+            C.experiment(cond_num).PatternID        = pat_num; %#ok<*AGROW>
+            C.experiment(cond_num).PatternName      = patterns{pat_num};
+            C.experiment(cond_num).Mode             = [4 0];
+            C.experiment(cond_num).InitialPosition  = [1 1];
+            C.experiment(cond_num).PosFunctionX     = [1 func_num];
+            C.experiment(cond_num).PosFuncNameX     = position_functions{func_num};
+            tmp=regexp(position_functions{func_num},'\SAMPRATE_','split');
+            C.experiment(cond_num).FuncFreqX        = str2double(tmp{2}(1:4));
+            % Y position function is not useable
+            C.experiment(cond_num).PosFunctionY     = [2 0];
+            C.experiment(cond_num).PosFuncNameY     = 'none';
+            C.experiment(cond_num).FuncFreqY        = default_frequency;
+            C.experiment(cond_num).Gains            = [0 0 0 0];
+            C.experiment(cond_num).Duration         = ol_duration;
+            C.experiment(cond_num).note             = '';
+            % Keep track of how long this experiment will be
+            total_ol_dur = total_ol_dur + C.experiment(cond_num).Duration + .1;
+            % Increment the condition number
+            cond_num = cond_num + 1;           
+        end
+    end
+
+    % all the rest of the prog / reg stims:
+    for pat_num = [29:39 43:53 57:59 71:73 85:87 99:101]
+        clear func_nums
+        tmp=regexp(patterns{pat_num},'\NUM_FRAMES_','split');
+        num_frames = str2double(tmp{2}(1:3))-1;
+        if (pat_num >= 29 && pat_num <= 39) || (pat_num >= 57 && pat_num <= 59) || (pat_num >= 85 && pat_num <= 87)            
+            if num_frames == 8
+                % 4 pixel stimuli no flicker
+                func_nums = 13:18;
+            elseif num_frames == 16
+                % 4 pixel stimuli with flicker
+                func_nums = 19:24;
+            else
+                error('Func Num Problem!')
+            end
+            if pat_num == 32 || pat_num == 33 || pat_num == 34 || pat_num == 35 
+                % flicker by itself only goes in one 'direction' here
+                func_nums = func_nums(2:2:end);
+            end
+        elseif (pat_num >= 43 && pat_num <= 53) || (pat_num >= 71 && pat_num <= 73) || (pat_num >= 99 && pat_num <= 101)
+            if num_frames == 16
+                % 8 pixel stimuli no flicker
+                func_nums = 19:24;
+            elseif num_frames == 32
+                % 8 pixel stimuli with flicker
+                func_nums = 25:30;
+            else
+                error('Func Num Problem!')
+            end
+            if pat_num == 46 || pat_num == 47 || pat_num == 48 || pat_num == 49
+                % flicker by itself only goes in one 'direction' here
+                func_nums = func_nums(2:2:end);
+            end
+        else
+            error('Func Num Problem!')
+        end
+        for func_num = func_nums % all of the edge speeds (position functions)
+            C.experiment(cond_num).DisplayType      = 'panels';
+            C.experiment(cond_num).PatternID        = pat_num; %#ok<*AGROW>
+            C.experiment(cond_num).PatternName      = patterns{pat_num};
+            C.experiment(cond_num).Mode             = [4 0];
+            C.experiment(cond_num).InitialPosition  = [1 1];
+            C.experiment(cond_num).PosFunctionX     = [1 func_num];
+            C.experiment(cond_num).PosFuncNameX     = position_functions{func_num};
+            tmp=regexp(position_functions{func_num},'\SAMPRATE_','split');
+            C.experiment(cond_num).FuncFreqX        = str2double(tmp{2}(1:4));
+            % Y position function is not useable
+            C.experiment(cond_num).PosFunctionY     = [2 0];
+            C.experiment(cond_num).PosFuncNameY     = 'none';
+            C.experiment(cond_num).FuncFreqY        = default_frequency;
+            C.experiment(cond_num).Gains            = [0 0 0 0];
+            C.experiment(cond_num).Duration         = ol_duration;
+            C.experiment(cond_num).note             = '';
+            % Keep track of how long this experiment will be
+            total_ol_dur = total_ol_dur + C.experiment(cond_num).Duration + .1;
+            % Increment the condition number
+            cond_num = cond_num + 1;           
+        end
+    end
+    
 %===Set up closed_loop values==============================================
     C.closed_loop.DisplayType = 'controller';    
     C.closed_loop.PatternID   = numel(patterns);
