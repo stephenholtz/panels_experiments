@@ -18,7 +18,7 @@ classdef panels_arena_simulation < handle
 % (condition_struct.PosFuncNameY)
 
     properties (Constant, Access = private)
-        arena_display_clock = 4000; % hz
+        arena_display_clock = 10000; % hz
         space_time_diagram_samp_rate = 100; % fps
         movie_samp_rate = 30; % fps
         

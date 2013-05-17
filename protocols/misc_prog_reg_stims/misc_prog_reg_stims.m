@@ -29,18 +29,18 @@ function [C,repetition_duration] = misc_prog_reg_stims
     cl_duration = 2.0;
 
     % Edges:
-    for pat_num = 1:20 % all of the edge pattern numbers
+    for pat_num = 1:22 % all of the edge pattern numbers
         clear func_nums
-        if sum(pat_num == [5 10 15 20]) 
+        if sum(pat_num == [5 10 11 16 21 22]) 
             % The full sweeps are longer functions
             % the + or - in x is needed for cw ccw
-            func_nums = 7:12; 
-            steps_per_pat = 41;
+            func_nums = 8:2:12; 
+            steps_per_pat = 83;
         else
             % The prog / reg sweeps are shorter functions
             % the pattern has prog or reg, so all are + in x
-            func_nums = 1:2:6;
-            steps_per_pat = 83;
+            func_nums = 2:2:6;
+            steps_per_pat = 41;
         end
         for func_num = func_nums % all of the edge speeds (position functions)
             C.experiment(cond_num).DisplayType      = 'panels';
@@ -59,7 +59,7 @@ function [C,repetition_duration] = misc_prog_reg_stims
             C.experiment(cond_num).Gains            = [0 0 0 0];
             tmp=regexp(position_functions{func_num},'\FPS_','split');
             fps= str2double(tmp{2}(1:3));
-            C.experiment(cond_num).Duration         = steps_per_pat/fps + .1;
+            C.experiment(cond_num).Duration         = steps_per_pat/fps;
             C.experiment(cond_num).note             = '';
             % Keep track of how long this experiment will be
             total_ol_dur = total_ol_dur + C.experiment(cond_num).Duration + .1;
@@ -69,9 +69,9 @@ function [C,repetition_duration] = misc_prog_reg_stims
     end
 
     % randomized blocks:
-    for pat_num = 21:26 % all of the edge pattern numbers
+    for pat_num = 23:28 % all of the edge pattern numbers
         clear func_nums
-        if (pat_num < 24) 
+        if (pat_num < 26) 
             % the '96' patterns are lam 30
             func_nums = 31:36; 
         else
@@ -103,7 +103,7 @@ function [C,repetition_duration] = misc_prog_reg_stims
     end
 
     % triangle wave flicker:
-    for pat_num = [27 28]
+    for pat_num = [29 30]
         clear func_nums
         func_nums = 61:2:68;
         for func_num = func_nums % all of the edge speeds (position functions)
@@ -131,7 +131,7 @@ function [C,repetition_duration] = misc_prog_reg_stims
     end
     
     % for the reverse phi stuff (lower speeds)
-    for pat_num = 54:56
+    for pat_num = 56:58
         clear func_nums
         tmp=regexp(patterns{pat_num},'\NUM_FRAMES_','split');
         num_frames = str2double(tmp{2}(1:3))-1;
@@ -170,11 +170,11 @@ function [C,repetition_duration] = misc_prog_reg_stims
     end
 
     % all the rest of the prog / reg stims:
-    for pat_num = [29:39 43:53 57:59 71:73 85:87 99:101]
+    for pat_num = [31:41 45:55 59:61 73:75 87:89 101:103]
         clear func_nums
         tmp=regexp(patterns{pat_num},'\NUM_FRAMES_','split');
         num_frames = str2double(tmp{2}(1:3))-1;
-        if (pat_num >= 29 && pat_num <= 39) || (pat_num >= 57 && pat_num <= 59) || (pat_num >= 85 && pat_num <= 87)            
+        if (pat_num >= 31 && pat_num <= 41) || (pat_num >= 59 && pat_num <= 61) || (pat_num >= 87 && pat_num <= 89)            
             if num_frames == 8
                 % 4 pixel stimuli no flicker
                 func_nums = 13:18;
@@ -184,11 +184,11 @@ function [C,repetition_duration] = misc_prog_reg_stims
             else
                 error('Func Num Problem!')
             end
-            if pat_num == 32 || pat_num == 33 || pat_num == 34 || pat_num == 35 
+            if pat_num == 34 || pat_num == 35 || pat_num == 36 || pat_num == 37 
                 % flicker by itself only goes in one 'direction' here
                 func_nums = func_nums(2:2:end);
             end
-        elseif (pat_num >= 43 && pat_num <= 53) || (pat_num >= 71 && pat_num <= 73) || (pat_num >= 99 && pat_num <= 101)
+        elseif (pat_num >= 45 && pat_num <= 55) || (pat_num >= 73 && pat_num <= 75) || (pat_num >= 101 && pat_num <= 103)
             if num_frames == 16
                 % 8 pixel stimuli no flicker
                 func_nums = 19:24;
@@ -198,7 +198,7 @@ function [C,repetition_duration] = misc_prog_reg_stims
             else
                 error('Func Num Problem!')
             end
-            if pat_num == 46 || pat_num == 47 || pat_num == 48 || pat_num == 49
+            if pat_num == 48 || pat_num == 49 || pat_num == 50 || pat_num == 51
                 % flicker by itself only goes in one 'direction' here
                 func_nums = func_nums(2:2:end);
             end

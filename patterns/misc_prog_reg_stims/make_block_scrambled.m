@@ -29,10 +29,15 @@ full_cols = 7:82; % -142.5->142.5
 horiz = 1:num_rows;
 
 % Set up greyscale values
-gs_val = 3;
+% gs_val = 3;
+% min_gs = 0;
+% mid_gs = 3;
+% max_gs = 7;
+% Use gs 2
+gs_val = 2;
 min_gs = 0;
-mid_gs = 3;
-max_gs = 7;
+mid_gs = 1;
+max_gs = 3;
 
 num_pat_inds = num_rows*num_cols;
 dummy_frame = mid_gs*ones(num_rows,num_cols,1);

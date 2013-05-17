@@ -63,7 +63,7 @@ for steps_per_stim = [41,83] % DONE
 end
 
 % The position functions for prog / reg / full-field motion
-for steps_per_stim = [8,16,32,96,96*2] % DONE
+for pat_steps_per_stim = [8,16,32,96,96*2] % DONE
     for temp_freq = [3,6,12]
         for direction = [-1 1]
             if direction == -1
@@ -74,12 +74,15 @@ for steps_per_stim = [8,16,32,96,96*2] % DONE
             % the 96 case is special, needs to loop through 96 positions,
             % but at the frame rate as if it were periodic after only 8, 16
             % frames.
-            if steps_per_stim == 96
+            if pat_steps_per_stim == 96
                 fps = temp_freq*8;
-            elseif steps_per_stim == 96*2
+                steps_per_stim = 96;
+            elseif pat_steps_per_stim == 96*2
                 fps = temp_freq*16;
+                steps_per_stim = 96;
             else
-                fps = temp_freq*steps_per_stim;
+                steps_per_stim = pat_steps_per_stim;
+                fps = temp_freq*pat_steps_per_stim;
             end
             [func,pos_func_samp_freq] = make_determine_best_samp_rate_simple_looping_position_functions(steps_per_stim,fps,direction,dummy_frame_flag);
 
