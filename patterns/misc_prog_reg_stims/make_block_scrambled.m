@@ -21,11 +21,12 @@ pad_num2str_w_zeros = @(num,num_zeros)([repmat('0',1,num_zeros - numel(num2str(n
 
 testing_flag = 0;
 row_compression = 0;
-num_cols = 96;
+num_stim_cols = 32; % only use 32 of them
+num_arena_cols = 96;
 num_rows = 32;
-left_cols = 7:40; % -142.5->15, 15->142.5
-right_cols = 49:82; % 0->142.5
-full_cols = 7:82; % -142.5->142.5
+left_cols = 8:39; % -142.5->15, 15->142.5
+right_cols = 50:81; % 0->142.5
+full_cols = [left_cols right_cols]; % -142.5->142.5
 horiz = 1:num_rows;
 
 % Set up greyscale values
@@ -39,8 +40,8 @@ min_gs = 0;
 mid_gs = 1;
 max_gs = 3;
 
-num_pat_inds = num_rows*num_cols;
-dummy_frame = mid_gs*ones(num_rows,num_cols,1);
+num_pat_inds = num_rows*num_stim_cols;
+dummy_frame = mid_gs*ones(num_rows,num_arena_cols,1);
 Pats = dummy_frame;
 
 for stripe_lam = [30 60]
@@ -49,7 +50,7 @@ for stripe_lam = [30 60]
     n_px = stripe_lam/2 /3.75;
 
     num_block_rows = num_rows/n_px;
-    num_block_cols = num_cols/n_px;
+    num_block_cols = num_stim_cols/n_px;
 
     % Make half of the blocks on and half off, then shuffle them around
     num_blocks = num_block_rows*num_block_cols;
@@ -71,13 +72,14 @@ for stripe_lam = [30 60]
             side_str = 'left';
         elseif side == 3
             curr_cols = full_cols;
+            block_matrix = [block_matrix block_matrix];
             side_str = 'full';
         end
 
-        for pos = 1:num_cols % this is periodic wrt the whole arena
+        for pos = 1:num_stim_cols % this is periodic wrt the whole arena
             Pats(:,:,pos) = dummy_frame; %#ok<*SAGROW>
             temp_block_matrix = circshift(block_matrix,[0 pos-1]);
-            Pats(1:num_rows,curr_cols,pos) = temp_block_matrix(1:num_rows,curr_cols);
+            Pats(1:num_rows,curr_cols,pos) = temp_block_matrix(1:num_rows,:);
         end
 
         num_frames_str = ['NUM_FRAMES_' pad_num2str_w_zeros(size(Pats,3),3) '_'];
