@@ -26,7 +26,7 @@ num_arena_cols = 96;
 num_rows = 32;
 left_cols = 8:39; % -142.5->15, 15->142.5
 right_cols = 50:81; % 0->142.5
-full_cols = [left_cols right_cols]; % -142.5->142.5
+full_cols = 29:60; % -63.75->63.75
 horiz = 1:num_rows;
 
 % Set up greyscale values
@@ -72,7 +72,6 @@ for stripe_lam = [30 60]
             side_str = 'left';
         elseif side == 3
             curr_cols = full_cols;
-            block_matrix = [block_matrix block_matrix];
             side_str = 'full';
         end
 
