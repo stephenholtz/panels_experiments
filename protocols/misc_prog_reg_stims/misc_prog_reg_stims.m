@@ -69,7 +69,7 @@ function [C,repetition_duration] = misc_prog_reg_stims
     end
 
     % randomized blocks:
-    for pat_num = 23:28 % all of the edge pattern numbers
+    for pat_num = 23:28 
         clear func_nums
         if (pat_num < 26) 
             % the '96' patterns are lam 30
