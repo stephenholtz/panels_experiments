@@ -24,8 +24,8 @@ row_compression = 0;
 num_stim_cols = 32; % only use 32 of them
 num_arena_cols = 96;
 num_rows = 32;
-left_cols = 8:39; % -142.5->15, 15->142.5
-right_cols = 50:81; % 0->142.5
+left_cols = 9:40; % -142.5->15, 15->142.5
+right_cols = 49:80; % 0->142.5
 full_cols = 29:60; % -63.75->63.75
 horiz = 1:num_rows;
 

@@ -122,16 +122,42 @@ if 1
                         end
                         
                     elseif side == 3
+%                         Pats = dummy_frame_rc;
+%                         side_str = 'full';
+%                         for i = 1:numel(full_cols)+stripe_size+1
+%                             Pats(:,:,i,1) = dummy_frame_rc;
+%                             Pats(1:num_rows_rc,full_cols,i) = temp_pat(1:num_rows_rc,full_cols,mod(full_cols(1)-stripe_size-1+i,num_cols));
+%                         end
+%                         Pats = add_dummy_frame_to_pattern(Pats,dummy_frame_rc,'x',1);
+%                         num_frames_str = ['NUM_FRAMES_' pad_num2str_w_zeros(size(Pats,3),3) '_'];
+%                         pattern_str = [num_frames_str side_str '_' pol_str '_' bar_str];
+%                         count = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_str,save_directory,count,testing_flag);
                         Pats = dummy_frame_rc;
                         side_str = 'full';
-                        for i = 1:numel(full_cols)+stripe_size+1
-                            Pats(:,:,i,1) = dummy_frame_rc;
-                            Pats(1:num_rows_rc,full_cols,i) = temp_pat(1:num_rows_rc,full_cols,mod(full_cols(1)-stripe_size-1+i,num_cols));
+                        for dir = 1:2
+                            Pats = dummy_frame_rc;
+                            if dir == 1
+                                dir_str = 'cw';
+                                for i = 1:numel(full_cols)+1+stripe_size
+                                    Pats(:,:,i,1) = dummy_frame_rc;
+                                    Pats(1:num_rows_rc,full_cols,i) = temp_pat(1:num_rows_rc,full_cols,mod(full_cols(1)-2+i,num_cols));
+                                end
+                            elseif dir == 2
+                                dir_str = 'ccw';
+                                for i = 1:numel(full_cols)+1
+                                    Pats(:,:,i,1) = dummy_frame_rc;
+                                    Pats(1:num_rows_rc,full_cols,i) = temp_pat(1:num_rows_rc,full_cols,full_cols(end)+1-i);
+                                end
+                                for i = size(Pats,3):(size(Pats,3)+stripe_size)
+                                    Pats(:,:,i,1) = Pats(:,:,size(Pats,3),1);
+                                end
+                            end
+                            
+                            Pats = add_dummy_frame_to_pattern(Pats,dummy_frame_rc,'x',1);
+                            num_frames_str = ['NUM_FRAMES_' pad_num2str_w_zeros(size(Pats,3),3) '_'];
+                            pattern_str = [num_frames_str side_str '_' dir_str '_' pol_str '_' bar_str];
+                            count = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_str,save_directory,count,testing_flag);
                         end
-                        Pats = add_dummy_frame_to_pattern(Pats,dummy_frame_rc,'x',1);
-                        num_frames_str = ['NUM_FRAMES_' pad_num2str_w_zeros(size(Pats,3),3) '_'];
-                        pattern_str = [num_frames_str side_str '_' pol_str '_' bar_str];
-                        count = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_str,save_directory,count,testing_flag);
                     end
                 end
 

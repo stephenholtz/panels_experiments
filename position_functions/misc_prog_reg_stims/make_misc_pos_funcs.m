@@ -32,6 +32,7 @@ pad_num2str_w_zeros = @(num,num_zeros)([repmat('0',1,num_zeros - numel(num2str(n
 % edge sweep                = 41
 % full edge sweep           = 83
 
+frames_to_append = 1000;
 dummy_frame_flag = 1;
 func_iter = 1;
 
@@ -45,6 +46,8 @@ for steps_per_stim = [41,83] % DONE
                 dir = 'pos';
             end
             [func,pos_func_samp_freq] = make_determine_best_samp_rate_simple_looping_position_functions(steps_per_stim,fps,direction,dummy_frame_flag);
+
+            func = [func repmat(func(end),1,frames_to_append)];
 
             pos_func_samp_freq_name = pad_num2str_w_zeros(pos_func_samp_freq,4);
             
@@ -109,7 +112,7 @@ for pat_steps_per_stim = [32 32]
             % but at the frame rate as if it were periodic after only 8, 16
             % frames.
             steps_per_stim = pat_steps_per_stim;
-            fps = pat_pix*pat_steps_per_stim;
+            fps = pat_pix*temp_freq; % VIM EDIT CHECK IN MATLAB
 
             [func,pos_func_samp_freq] = make_determine_best_samp_rate_simple_looping_position_functions(steps_per_stim,fps,direction,dummy_frame_flag);
 
