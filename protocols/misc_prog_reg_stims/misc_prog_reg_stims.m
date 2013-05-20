@@ -68,7 +68,8 @@ function [C,repetition_duration] = misc_prog_reg_stims
         end
     end
 
-    % randomized blocks:
+    % randomized blocks: for some reason these patterns do not load onto
+    % the panels correctly...
     for pat_num = 25:30 
         clear func_nums
         if (pat_num < 28) 
@@ -78,7 +79,7 @@ function [C,repetition_duration] = misc_prog_reg_stims
             % the '192' patterns are lam 60 
             func_nums = 37:42;
         end
-        for func_num = func_nums % all of the edge speeds (position functions)
+        for func_num = func_nums
             C.experiment(cond_num).DisplayType      = 'panels';
             C.experiment(cond_num).PatternID        = pat_num; %#ok<*AGROW>
             C.experiment(cond_num).PatternName      = patterns{pat_num};

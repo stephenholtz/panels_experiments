@@ -29,16 +29,22 @@ right_cols = 49:80; % 0->142.5
 full_cols = 29:60; % -63.75->63.75
 horiz = 1:num_rows;
 
-% Set up greyscale values
-% gs_val = 3;
-% min_gs = 0;
-% mid_gs = 3;
-% max_gs = 7;
-% Use gs 2
-gs_val = 2;
-min_gs = 0;
-mid_gs = 1;
-max_gs = 3;
+% Set up greyscale values, 3 works
+gs_val = 3;
+switch gs_val
+    case 1
+        min_gs = 0;
+        mid_gs = 1;
+        max_gs = 1;        
+    case 2
+        min_gs = 0;
+        mid_gs = 1;
+        max_gs = 3;
+    case 3
+        min_gs = 0;
+        mid_gs = 3;
+        max_gs = 7;
+end
 
 num_pat_inds = num_rows*num_stim_cols;
 dummy_frame = mid_gs*ones(num_rows,num_arena_cols,1);
@@ -81,7 +87,7 @@ for stripe_lam = [30 60]
             Pats(1:num_rows,curr_cols,pos) = temp_block_matrix(1:num_rows,:);
         end
 
-        num_frames_str = ['NUM_FRAMES_' pad_num2str_w_zeros(size(Pats,3),3) '_'];
+        num_frames_str = ['gs_' num2str(gs_val) '_NUM_FRAMES_' pad_num2str_w_zeros(size(Pats,3),3) '_'];
         pattern_str = [num_frames_str 'block_randomized_lam_' num2str(stripe_lam) '_' side_str];
         Pats = add_dummy_frame_to_pattern(Pats,dummy_frame,'x',1);
         count = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_str,save_directory,count,testing_flag);
