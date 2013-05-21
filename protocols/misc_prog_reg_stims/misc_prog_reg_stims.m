@@ -2,16 +2,12 @@ function [C,repetition_duration] = misc_prog_reg_stims
 % C needs fields: experiment, closed_loop and initial_alignment
 
 %===Gather all the contents of the SD card=================================
-
     func_loc=mfilename('fullpath');
     SD_card = fullfile(func_loc,'..','SD_card_contents');
-
     patterns = dir([SD_card filesep 'Pattern*']);
     patterns = {patterns.name};
-
     position_functions = dir([SD_card filesep 'position_function*']);
     position_functions = {position_functions.name};
-
     panel_cfgs = dir([SD_card filesep 'cfg*']);
     panel_cfgs = {panel_cfgs.name};
 
@@ -20,12 +16,11 @@ function [C,repetition_duration] = misc_prog_reg_stims
 
     % Start a few variables for below
     cfg_num = 1;
-    
     cond_num = 1;
     total_ol_dur = 0;
     default_frequency = 50;
-    ol_duration = 2.0;
-    cl_duration = 2.0;
+    ol_duration = 1.9;
+    cl_duration = 1.5;
 
     % Edges:
     for pat_num = 1:24 % all of the edge pattern numbers

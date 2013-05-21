@@ -38,7 +38,7 @@ func_iter = 1;
 
 % The position functions for the edges
 for steps_per_stim = [41,83] % DONE
-    for fps = [150,225,300]
+    for fps = [75,150,300]
         for direction = [-1 1]
             if direction == -1
                 dir = 'neg';
