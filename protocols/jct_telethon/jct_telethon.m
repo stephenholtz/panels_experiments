@@ -1,5 +1,5 @@
 function [C,repetition_duration] = jct_telethon
-% C needs fields experiment, closed_loop and initial_alignment
+% C needs fields experiment, interspersal and initial_alignment
 % 
 % up and down presented unilaterally to see if I can get turning or
 % potential comparison
@@ -1431,26 +1431,26 @@ total_ol_dur = total_ol_dur + C.experiment(cond_num).Duration;cond_num = cond_nu
 % maintain the voltage values...
 cond_num = cond_num + 8;
 
-%===Set up closed_loop values==============================================
-    C.closed_loop.PatternID      = 1;
-    C.closed_loop.PatternName    = {'Pattern_11_8wide_bothcontrasts_stripes_c49_telethon.mat'};
-    C.closed_loop.Mode           = [1 0];
-    C.closed_loop.InitialPosition= [49 1];
-    C.closed_loop.Gains          = [-14 0 0 0];
-    C.closed_loop.PosFunctionX   = [1 0];
-    C.closed_loop.PosFunctionY   = [2 0];
-    C.closed_loop.FuncFreqY      = default_frequency;
-    C.closed_loop.FuncFreqX 	 = default_frequency;
-    C.closed_loop.PosFuncLoc     = 'none';            
-    C.closed_loop.PosFuncNameX   = 'none';
-    C.closed_loop.PosFuncNameY   = 'none';
-    C.closed_loop.PanelCfgNum    = 1;
-    C.closed_loop.PanelCfgName   = panel_cfgs{1};
-    C.closed_loop.Duration       = cl_duration;
-    C.closed_loop.Voltage        = 0; % Very important!
+%===Set up interspersal values==============================================
+    C.interspersal.PatternID      = 1;
+    C.interspersal.PatternName    = {'Pattern_11_8wide_bothcontrasts_stripes_c49_telethon.mat'};
+    C.interspersal.Mode           = [1 0];
+    C.interspersal.InitialPosition= [49 1];
+    C.interspersal.Gains          = [-14 0 0 0];
+    C.interspersal.PosFunctionX   = [1 0];
+    C.interspersal.PosFunctionY   = [2 0];
+    C.interspersal.FuncFreqY      = default_frequency;
+    C.interspersal.FuncFreqX 	 = default_frequency;
+    C.interspersal.PosFuncLoc     = 'none';            
+    C.interspersal.PosFuncNameX   = 'none';
+    C.interspersal.PosFuncNameY   = 'none';
+    C.interspersal.PanelCfgNum    = 1;
+    C.interspersal.PanelCfgName   = panel_cfgs{1};
+    C.interspersal.Duration       = cl_duration;
+    C.interspersal.Voltage        = 0; % Very important!
     
 %===Set up initial_alignment values========================================
-    C.initial_alignment = C.closed_loop;
+    C.initial_alignment = C.interspersal;
 
 %===Assign voltage values to the experimental conditions===================
 
@@ -1467,7 +1467,7 @@ cond_num = cond_num + 8;
         C.experiment(cond_num).PosFuncNameY   = 'none';
     end
     
-    total_dur = total_ol_dur + numel(C.experiment)*C.closed_loop.Duration;
+    total_dur = total_ol_dur + numel(C.experiment)*C.interspersal.Duration;
     repetition_duration = total_dur/60;
 
 end
