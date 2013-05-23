@@ -16,6 +16,30 @@ classdef panels_arena_simulation < handle
 % (condition_struct.PosFuncLoc)
 % (condition_struct.PosFuncNameX)
 % (condition_struct.PosFuncNameY)
+%
+% Example use:
+% 
+% % construct stim_obj, which has the fields listed in properties below
+% stim_obj = panels_arena_stimulation(condition_struct);
+% 
+% % use the methods to make figures
+% std_handle = stim_obj.MakeSimpleSpaceTimeDiagram('green')
+% params_handle = stim_obj.MakeParametersPage
+%
+% % save the figure by passing the handles
+% save_path = pwd;
+% panels_arena_simulation.SaveSpaceTimeDiagram(save_path,std_handle,params_handle);
+%
+% % making a gif or movie is different. to make it fast, saving and creating happen at the same time
+% stim_obj.MakeSaveAnimatedGif(save_path)
+% stim_obj.MakeMovie('green',save_path)
+%
+% TODO: 
+%  - Fix the sampling to make it intelligent vs the high rate then downsample
+%  - Make the movie saving a bit faster, and give optional text on frame
+%    ranges.
+%
+% SLH - 2012
 
     properties (Constant, Access = private)
         arena_display_clock = 10000; % hz
@@ -252,7 +276,7 @@ classdef panels_arena_simulation < handle
                 y_ind = obj.y_pos_vector(curr_pos);                
                 x_ind = obj.x_pos_vector(curr_pos);
 
-                % Effectively hard coded...
+                % hard coded...
                 if obj.row_compression
                     obj.stim_frames(:,:,curr_pos) = [   repmat(obj.pattern(1,:,x_ind,y_ind),8,1);...
                                                         repmat(obj.pattern(2,:,x_ind,y_ind),8,1);...
@@ -307,46 +331,6 @@ classdef panels_arena_simulation < handle
             axis off
             
         end
-        
-        function snaps_handle = MakeSnapshotTimeSeries(obj,num_snapshots)
-            
-            snaps_handle = figure('Color',[.25 .25 .25],'Colormap',obj.colormap,'Name','Stimulus Snapshot Diagram','NumberTitle','off');
-            
-            scale_factor = 1/num_snapshots;
-            
-            inds_to_use = round(linspace(1,size(obj.stim_frames,3)-1,num_snapshots));
-            
-            graph_height = 1/((num_snapshots*.15)+num_snapshots);
-            
-            graph_width = .9;
-            
-            graph_y_offset = graph_height+.01;
-            
-            graph_x_offset = .05;
-            
-            iter = 1;
-            
-            for ind = inds_to_use
-                
-                subplot('Position',[ graph_x_offset, 1-.02-(iter*graph_y_offset), graph_width, graph_height])
-                
-                rgb_frame = ind2rgb(obj.stim_frames(:,obj.small_arena_cols,ind),obj.colormap);
-                
-                reshaped_frame = imresize(rgb_frame,scale_factor,'nearest');
-                
-                imagesc(reshaped_frame)
-                
-                axis off
-                
-                ind_time_ms = num2str(ind/2);
-                annotation('textbox','Position',[0, 1-.02-(iter*graph_y_offset), graph_width, graph_height],...
-                    'string',{'Time ', [ind_time_ms ' ms']},'edgecolor','none');
-                
-                iter = iter + 1;
-                
-            end
-            
-        end
 
         function params_handle = MakeParametersPage(obj)
 
@@ -385,21 +369,18 @@ classdef panels_arena_simulation < handle
             inds_to_use = 1:samp_from_full_res_rate:size(obj.stim_frames,3);
 
             video_mat = [];
-%             video_mat = zeros(obj.small_arena_movie_scale_factor*obj.num_arena_rows,...
-%                 obj.small_arena_movie_scale_factor*numel(obj.small_arena_cols),3,numel(inds_to_use));
-            
+            % video_mat = zeros(obj.small_arena_movie_scale_factor*obj.num_arena_rows:
+
             iter = 1;
             
             for ind = inds_to_use
-                % Do a reshape on each framema
-                %rgb_frame = ind2rgb(obj.stim_frames(:,obj.small_arena_cols,ind),obj.colormap);
-                %reshaped_frame = imresize(rgb_frame,obj.small_arena_movie_scale_factor,'nearest');
+                % Do a reshape on each frame
                 reshaped_frame = kron(obj.stim_frames(:,obj.small_arena_cols,ind),ones(obj.small_arena_movie_scale_factor));
                 video_mat(:,:,:,iter) = reshaped_frame;
                 iter = iter + 1;
             end
             
-            imwrite(video_mat, obj.colormap, [save_file_path '.gif'],'DelayTime',0,'LoopCount',inf);
+            imwrite(video_mat, obj.colormap, [save_file_path '.gif'],'DelayTime',2,'LoopCount',inf);
             
         end
         
@@ -441,21 +422,10 @@ classdef panels_arena_simulation < handle
     
     methods (Static)
         
-        function AddLabelsToSpaceTimeDiagram(std_handle)
-            set(gcf,std_handle)
-            
-            
-            
-        end % ADD THIS FUNCTION!
-
-        function SaveSpaceTimeDiagram(save_file_path,std_handle,params_handle,snaps_handle)
+        function SaveSpaceTimeDiagram(save_file_path,std_handle,params_handle)
             
             export_fig(std_handle,save_file_path,'-pdf')
 
-            if exist('snaps_handle','var') && snaps_handle
-                export_fig(snaps_handle,save_file_path,'-pdf','-append')
-            end
-            
             if exist('params_handle','var') && params_handle
                 export_fig(params_handle,save_file_path,'-pdf','-append')
             end
