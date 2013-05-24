@@ -1,4 +1,4 @@
-function [C,repetition_duration] = simple_flicker
+function [C,repetition_duration] = simple_flicker_motion
 % imaging protocol
 % C needs to have fields:  initial_alignment, experiment, interpsersal
 
@@ -26,21 +26,19 @@ function [C,repetition_duration] = simple_flicker
     % imaging anything, stimulus dir is when I am imaging and includes
     % periods of time before and after the 'actual' stimulus is 
     % presented.
-    stimulus_duration = 10;
-    interspersal_duration = 10;
+    stimulus_duration = 6.25;
+    interspersal_duration = 6.25;
 
-    for pat_num = 1:24 % all of the edge pattern numbers
+    for pat_num = 1:3 % all flicker patterns (right side of fly)
         clear func_nums
-        if sum(pat_num == [5 6 11 12 17 18 23 24])
-            % The full sweeps are longer functions
-            % the + or - in x is needed for cw ccw
-            func_nums = 8:2:12; 
-            steps_per_pat = 83;
+        if sum(pat_num == [1 2])
+            % On and off flicker only need one direction
+            func_nums = [2 4 6]; 
+            steps_per_pat = 2;
         else
-            % The prog / reg sweeps are shorter functions
-            % the pattern has prog or reg, so all are + in x
-            func_nums = 2:2:6;
-            steps_per_pat = 41;
+            % The prog / reg sweeps are neg / pos pos funcs
+            func_nums = [7:2:12 8:2:12];
+            steps_per_pat = 25;
         end
         for func_num = func_nums % all of the edge speeds (position functions)
             C.experiment(cond_num).DisplayType      = 'panels';
@@ -57,13 +55,10 @@ function [C,repetition_duration] = simple_flicker
             C.experiment(cond_num).PosFuncNameY     = 'none';
             C.experiment(cond_num).FuncFreqY        = default_frequency;
             C.experiment(cond_num).Gains            = [0 0 0 0];
-            tmp=regexp(position_functions{func_num},'\FPS_','split');
-            fps= str2double(tmp{2}(1:3));
-            % add in an extra time segment to get responses after the stimulus is 'over'
-            C.experiment(cond_num).Duration         = steps_per_pat/fps + .2;
+            C.experiment(cond_num).Duration         = stimulus_duration;
             C.experiment(cond_num).note             = '';
             % Keep track of how long this experiment will be
-            total_ol_dur = total_ol_dur + C.experiment(cond_num).Duration + .1;
+            total_ol_dur = total_ol_dur + C.experiment(cond_num).Duration + .3;
             % Increment the condition number
             cond_num = cond_num + 1;           
         end
@@ -71,11 +66,11 @@ function [C,repetition_duration] = simple_flicker
 
 %===Set up interspersal values==============================================
     C.interspersal.DisplayType = 'controller';    
-    C.interspersal.PatternID   = numel(patterns);
-    C.interspersal.PatternName = patterns(numel(patterns));
-    C.interspersal.Mode           = [1 0];
-    C.interspersal.InitialPosition= [49 1];
-    C.interspersal.Gains          = [-14 0 0 0];
+    C.interspersal.PatternID   = 4;
+    C.interspersal.PatternName = patterns(4);
+    C.interspersal.Mode           = [0 0];
+    C.interspersal.InitialPosition= [1 1];
+    C.interspersal.Gains          = [0 0 0 0];
     C.interspersal.PosFunctionX   = [1 0];
     C.interspersal.PosFunctionY   = [2 0];
     C.interspersal.FuncFreqY      = default_frequency;
@@ -85,7 +80,7 @@ function [C,repetition_duration] = simple_flicker
     C.interspersal.PosFuncNameY   = 'none';
     C.interspersal.PanelCfgNum    = cfg_num;
     C.interspersal.PanelCfgName   = panel_cfgs{cfg_num};
-    C.interspersal.Duration       = cl_duration;
+    C.interspersal.Duration       = interspersal_duration;
     C.interspersal.Voltage        = 0; % Very important!
 
 %===Set up initial_alignment values========================================
@@ -106,4 +101,3 @@ function [C,repetition_duration] = simple_flicker
     repetition_duration = total_dur/60;
 
 end
-

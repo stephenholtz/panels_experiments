@@ -1,4 +1,4 @@
-function [function_vector,min_pos_func_sample_rate] = make_determine_best_samp_rate_simple_looping_position_functions(num_pattern_frames,fps,direction,dummy_frame_flag)
+function [function_vector,pos_func_sample_rate] = make_determine_best_samp_rate_simple_looping_position_functions(num_pattern_frames,fps,direction,dummy_frame_flag,varargin)
 % make a position function to move a pattern with a very simple vector, in
 % this case determine what the best position function sampling rate is and
 % return it as the second argument
@@ -7,13 +7,21 @@ function [function_vector,min_pos_func_sample_rate] = make_determine_best_samp_r
 %
 % NOW NEEDS: the speed the pattern must move at in frames per second
 % i.e. (loop/second)*(frames/loop) = frames/second
+if exist('varargin','var')
+    use_highest_samp_rate = varargin{1};
+else
+    use_highest_samp_rate = 0;
+end
 
-% find the minimum sampling rate to make the loop work
+% find the sampling rate to make the loop work
 range_samp_rates = 1:1000;
 potential_step_sizes = (1/fps)*range_samp_rates;
-min_pos_func_sample_rate = min(range_samp_rates((round(potential_step_sizes)==potential_step_sizes)));
-step_size = (1/fps)*min_pos_func_sample_rate;
-
+if use_highest_samp_rate
+    pos_func_sample_rate = max(range_samp_rates((round(potential_step_sizes)==potential_step_sizes)));
+else
+    pos_func_sample_rate = min(range_samp_rates((round(potential_step_sizes)==potential_step_sizes)));
+end
+step_size = (1/fps)*pos_func_sample_rate;
 function_vector = [];
 for step = 1:num_pattern_frames
     function_vector = [function_vector repmat(step,1,step_size)]; %#ok<*AGROW>

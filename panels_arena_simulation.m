@@ -41,29 +41,32 @@ classdef panels_arena_simulation < handle
 %
 % SLH - 2012
 
-    properties (Constant, Access = private)
-        arena_display_clock = 10000; % hz
+    properties(Constant)
+        arena_display_clock = 1000; % hz
         space_time_diagram_samp_rate = 100; % fps
         movie_samp_rate = 30; % fps
         
         % number of pixels the arena is offset
         small_arena_offset = 4;
+        large_arena_offset = 0;
 
         % degrees each pixel represents
         small_arena_pixel_size = 3.75;
+        large_arena_pixel_size = 1.875;
 
         % the inds of columns actually displayed
         small_arena_cols = 1:88;
+        large_arena_cols = 1:96;
         
         num_arena_cols = 96;
         num_arena_rows = 32;
         
         % Makes very close to standard def...
         small_arena_movie_scale_factor = 16;
+        large_arena_movie_scale_factor = 16;
     end
     
     properties
-        
         full_condition_struct
         
         % Properties set by constructor
@@ -311,11 +314,11 @@ classdef panels_arena_simulation < handle
             % preallocate a vector for the space time diagram
             samp_from_full_res_rate = (obj.arena_display_clock/obj.space_time_diagram_samp_rate);
             
-            space_time_mat = zeros(size(obj.stim_frames,3)/samp_from_full_res_rate,numel(obj.small_arena_cols));
+             space_time_mat = zeros(size(obj.stim_frames,3)/samp_from_full_res_rate,numel(obj.([obj.arena_type '_arena_cols'])));
             
             iter = 1;
             for ind = 1:samp_from_full_res_rate:size(obj.stim_frames,3)
-                space_time_mat(iter,:) = obj.stim_frames((obj.num_arena_rows/2),obj.small_arena_cols,ind);
+                space_time_mat(iter,:) = obj.stim_frames((obj.num_arena_rows/2),1:numel(obj.([obj.arena_type '_arena_cols'])),ind);
                 iter = iter+1;
             end
             
@@ -375,7 +378,7 @@ classdef panels_arena_simulation < handle
             
             for ind = inds_to_use
                 % Do a reshape on each frame
-                reshaped_frame = kron(obj.stim_frames(:,obj.small_arena_cols,ind),ones(obj.small_arena_movie_scale_factor));
+                reshaped_frame = kron(obj.stim_frames(:,obj.small_arena_cols,ind),ones(obj.([obj.arena_type '_arena_movie_scale_factor'])));
                 video_mat(:,:,:,iter) = reshaped_frame;
                 iter = iter + 1;
             end
@@ -399,8 +402,8 @@ classdef panels_arena_simulation < handle
             for ind = inds_to_use
                 
                 % Do a reshape on each frame
-                rgb_frame = ind2rgb(obj.stim_frames(:,obj.small_arena_cols,ind),obj.colormap);
-                reshaped_frame = imresize(rgb_frame,obj.small_arena_movie_scale_factor,'nearest');
+                rgb_frame = ind2rgb(obj.stim_frames(:,obj.([obj.arena_type '_arena_cols']),ind),obj.colormap);
+                reshaped_frame = imresize(rgb_frame,obj.([obj.arena_type '_arena_movie_scale_factor']),'nearest');
                 
                 video_mat(:,:,:,iter) = reshaped_frame;
                 iter = iter + 1;
