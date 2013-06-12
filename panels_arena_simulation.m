@@ -296,12 +296,21 @@ classdef panels_arena_simulation < handle
         
         function cmap = SetColorMap(obj,~)
 
-        switch obj.grayscale_val
+         switch obj.grayscale_val
             case 1
-                cmap = [0 0 0; 0 1 0];
-            otherwise
-                cmap = [zeros(obj.grayscale_val^2,1), linspace(0,1,obj.grayscale_val^2)', zeros(obj.grayscale_val^2,1)];
-        end
+                cmap = [0 0 0; 0 1 0];   % 2 colors - on / off
+            case 2
+                cmap = [0 0 0; 0 1/3 0; 0 2/3 0; 0 1 0]; % 4 levels of gscale    
+            case 3
+                cmap = [0 0 0; 0 2/8 0; 0 3/8 0; 0 4/8 0; 0 5/8 0; 0 6/8 0; 0 7/8 0; 0 1 0];  % 8 levels of gscale        
+            case 4
+                cmap = [0 0 0; 0 2/16 0; 0 3/16 0; 0 4/16 0; 0 5/16 0; 0 6/16 0; 0 7/16 0; 0 8/16 0; ...
+                    0 9/16 0; 0 10/16 0; 0 11/16 0; 0 12/16 0; 0 13/16 0; 0 14/16 0; 0 15/16 0; 0 1 0];  % 16 levels of gscale        
+%             case 1
+%                 cmap = [0 0 0; 0 1 0];
+%             otherwise
+%                 cmap = [zeros(obj.grayscale_val^2,1), linspace(0,1,obj.grayscale_val^2)', zeros(obj.grayscale_val^2,1)];
+         end
         
         obj.colormap = cmap;
             
@@ -326,11 +335,12 @@ classdef panels_arena_simulation < handle
             
             subplot('Position',[0 0 1 1])
             colormap(obj.colormap);
-            if obj.grayscale_val == 1
-                imagesc(space_time_mat); %imagesc does NOT work properly with the colormap
-            else
-                image(space_time_mat); %imagesc does NOT work properly with the colormap
-            end
+            image(space_time_mat);
+%             if obj.grayscale_val == 1
+%                 imagesc(space_time_mat); %imagesc does NOT work properly with the colormap
+%             else
+%                 image(space_time_mat); %imagesc does NOT work properly with the colormap
+%             end
             axis off
             
         end
