@@ -26,7 +26,7 @@ function [C,repetition_duration] = sf_tf_dir_mot_sweep
     total_ol_dur = 0;
     default_frequency = 50;
     ol_duration = 2.25;
-    cl_duration = 2;
+    cl_duration = 1.75;
 
     %LEFT_v_grat_RIGHT_v1Hzflk
     %LEFT_v1Hzflk_RIGHT_v_grat
@@ -45,7 +45,7 @@ for stim_type = 1:4
             pat_nums = [7 6 14 13 21 20 28 27 35 34];
         case 4
             % Flicker on one side
-            pat_nums = [4 5 11 12 18 19 25 26 32 33];
+            pat_nums = [4 5 11 12 25 26];
     end
 
     for pat_num = pat_nums
