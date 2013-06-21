@@ -45,14 +45,17 @@ dummy_frame = mid_gs_value*ones(num_rows,96);
 % 1 blank
 % 2 bars (vertical)
 % 3 alternating flickering bars (1:1 Hz)
+% 4 full field flicker...
 pattern_combinations = [2 2 0;...
                         1 2 0;...
                         2 1 0;...
+                        2 3 0;...
+                        3 2 0;...
                         1 3 0;...
                         3 1 0;...
-                        2 3 0;...
-                        3 2 0];
-pattern_combination_str = {'blank','v_grat','v1Hzflk'};
+                        1 4 0;...
+                        4 1 0];
+pattern_combination_str = {'blank','v_grat','v1Hzflk','fullflk'};
 pad_num2str_w_zeros = @(num,num_zeros)([repmat('0',1,num_zeros - numel(num2str(num))) num2str(num)]);
 
 left_cols   = 7:40;     % -142.5->  15 
@@ -117,37 +120,12 @@ for noise_level = 1
                             end
                         end
                     case 4
-
-                        % vertical flicker at 2x the TF
-                        pol=1;
-                        for i = 1:stripe_size*4
-                            if ~mod(i,stripe_size)
-                                if pol == 1
-                                    pol = 2;
-                                elseif pol == 2
-                                    pol = 1;
-                                end
-                            end
-
-                            if pol == 1;
-                                 pat.(side_str)(:,:,i,1) = repmat([low_gs_value *ones(N_temp_pat_rows,stripe_size),high_gs_value*ones(N_temp_pat_rows,stripe_size)],1,ceil(N_temp_pat_cols/(2*stripe_size)));
-                            elseif pol == 2;
-                                pat.(side_str)(:,:,i,1) = repmat([high_gs_value*ones(N_temp_pat_rows,stripe_size),low_gs_value *ones(N_temp_pat_rows,stripe_size)],1,ceil(N_temp_pat_cols/(2*stripe_size)));
-                            end
-                        end
-                    case 5
-
-                        % reverse phi
-                        pol_1_grat = repmat([low_gs_value*ones(N_temp_pat_rows,stripe_size),high_gs_value*ones(N_temp_pat_rows,stripe_size)],1,ceil(N_temp_pat_cols/(2*stripe_size)));
-                        pol_2_grat = repmat([high_gs_value*ones(N_temp_pat_rows,stripe_size),low_gs_value *ones(N_temp_pat_rows,stripe_size)],1,ceil(N_temp_pat_cols/(2*stripe_size)));
-
-                        for i = 1:stripe_size*2
-                            if ~mod(i,2)
-                                pat.(side_str)(:,:,i,1) = circshift(pol_1_grat,[0 i-1]);
-                            else
-                                pat.(side_str)(:,:,i,1) = circshift(pol_2_grat,[0 i-1]);
-                            end
-                        end
+                        
+                        % full field flicker
+                        pat.(side_str)(:,:,1,1) = (low_gs_value*ones(N_temp_pat_rows,N_temp_pat_cols));
+                        pat.(side_str)(:,:,2,1) = (high_gs_value*ones(N_temp_pat_rows,N_temp_pat_cols));
+                        pat.(side_str)(:,:,3,1) = (low_gs_value*ones(N_temp_pat_rows,N_temp_pat_cols));
+                        pat.(side_str)(:,:,4,1) = (high_gs_value*ones(N_temp_pat_rows,N_temp_pat_cols));
                 end
             end
 

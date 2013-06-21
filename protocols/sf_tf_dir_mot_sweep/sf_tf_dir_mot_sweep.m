@@ -3,7 +3,7 @@ function [C,repetition_duration] = sf_tf_dir_mot_sweep
 %
 
 %===Gather all the contents of the SD card=================================
-    
+
     func_loc=mfilename('fullpath');
     SD_card = fullfile(func_loc,'..','SD_card_contents');
 
@@ -15,18 +15,18 @@ function [C,repetition_duration] = sf_tf_dir_mot_sweep
 
     panel_cfgs = dir([SD_card filesep 'cfg*']);
     panel_cfgs = {panel_cfgs.name};
-    
+
 %===Make the conditions====================================================
     pad_num2str_w_zeros = @(num,num_zeros)([repmat('0',1,num_zeros - numel(num2str(num))) num2str(num)]);
 
     % Start a few variables for below
     cfg_num = 1;
-    
+
     cond_num = 1;
     total_ol_dur = 0;
     default_frequency = 50;
     ol_duration = 2.25;
-    cl_duration = 1.75;
+    cl_duration = 1.65;
 
     %LEFT_v_grat_RIGHT_v1Hzflk
     %LEFT_v1Hzflk_RIGHT_v_grat
@@ -36,16 +36,16 @@ for stim_type = 1:4
     switch stim_type
         case 1
             % Motion on both sides
-            pat_nums = [1 8 15 22 29];
+            pat_nums = [1 10 19 28 37];
         case 2
             % Motion on one side
-            pat_nums = [2 3 9 10 16 17 23 24 30 31];
+            pat_nums = [2 3 11 12 20 21 29 30 38 39];
         case 3
             % Motion on one side flicker on other
-            pat_nums = [7 6 14 13 21 20 28 27 35 34];
+            pat_nums = [4 5 13 14 22 23 31 32 40 41];
         case 4
             % Flicker on one side
-            pat_nums = [4 5 11 12 25 26];
+            pat_nums = [6 7 15 16 24 25 33 34 42 43 44 45];
     end
 
     for pat_num = pat_nums
@@ -68,14 +68,14 @@ for stim_type = 1:4
             otherwise
                 error 'num_frames does not match position functions'
         end
-        
+
         if stim_type == 4
             % the flicker conditions only need positive directions
             func_nums = func_nums(2:2:end); 
         end
-        
+
         for func_num = func_nums
-                    
+
             C.experiment(cond_num).DisplayType      = 'panels';
             C.experiment(cond_num).PatternID        = pat_num; %#ok<*AGROW>
             C.experiment(cond_num).PatternName      = patterns{pat_num};
