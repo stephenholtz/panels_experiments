@@ -45,7 +45,9 @@ for stim_type = 1:4
             pat_nums = [4 5 13 14 22 23 31 32 40 41];
         case 4
             % Flicker on one side
-            pat_nums = [6 7 15 16 24 25 33 34 42 43 44 45];
+            %pat_nums = [6 7 15 16 24 25 33 34 42 43 44 45];
+            pat_nums = [6 7 15 16 33 34 44 45];
+            
     end
 
     for pat_num = pat_nums
