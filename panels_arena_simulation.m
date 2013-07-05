@@ -63,7 +63,7 @@ classdef panels_arena_simulation < handle
         
         % Makes very close to standard def...
         small_arena_movie_scale_factor = 16;
-        large_arena_movie_scale_factor = 16;
+        large_arena_movie_scale_factor = 2;
     end
     
     properties
@@ -388,7 +388,7 @@ classdef panels_arena_simulation < handle
             
             for ind = inds_to_use
                 % Do a reshape on each frame
-                reshaped_frame = kron(obj.stim_frames(:,obj.small_arena_cols,ind),ones(obj.([obj.arena_type '_arena_movie_scale_factor'])));
+                reshaped_frame = kron(obj.stim_frames(:,obj.([obj.arena_type '_arena_cols']),ind),ones(obj.([obj.arena_type '_arena_movie_scale_factor'])));
                 video_mat(:,:,:,iter) = reshaped_frame;
                 iter = iter + 1;
             end
@@ -406,7 +406,7 @@ classdef panels_arena_simulation < handle
             inds_to_use = 1:samp_from_full_res_rate:size(obj.stim_frames,3);
             
             video_mat = zeros(obj.small_arena_movie_scale_factor*obj.num_arena_rows,...
-                obj.small_arena_movie_scale_factor*numel(obj.small_arena_cols),3,numel(inds_to_use));
+                obj.small_arena_movie_scale_factor*numel(obj.([obj.arena_type '_arena_cols'])),3,numel(inds_to_use));
             
             iter = 1;
             for ind = inds_to_use

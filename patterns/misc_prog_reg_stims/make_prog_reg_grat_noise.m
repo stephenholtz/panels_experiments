@@ -77,9 +77,9 @@ for stripe_size = stripe_sizes %Stripe sizes 30,60 degs
     % Determine how large temporary pattern should be
     N_temp_pat_rows = num_rows;
     N_temp_pat_cols = 96;
-    
+
     for pat_comb_row = 1:size(pattern_combinations,1)
-        
+
         clear pat
         for side = 1:sum(pattern_combinations(pat_comb_row,:)>0)
             if side == 1
@@ -177,7 +177,7 @@ for stripe_size = stripe_sizes %Stripe sizes 30,60 degs
         else
             num_pats_to_make = 1;
         end
-        
+
         for pat_type = 1:num_pats_to_make
             
             if pat_type == 1
@@ -201,7 +201,7 @@ for stripe_size = stripe_sizes %Stripe sizes 30,60 degs
                     if ~mod(x,r_loop_sz)
                        r_done = 1;
                     end
-                    
+
                     Pats(:,:,x,1) = dummy_frame; %#ok<*SAGROW>
                     Pats(horiz,left_cols,x,1) = pat.left(horiz,left_cols,mod(x-1,l_loop_sz)+1);
                     Pats(horiz,right_cols,x,1) = pat.right(horiz,right_cols,mod(x-1,r_loop_sz)+1); 
@@ -211,22 +211,22 @@ for stripe_size = stripe_sizes %Stripe sizes 30,60 degs
 
                 % Add noise to the dummy frame as well.
                 Pats = add_dummy_frame_to_pattern(Pats,dummy_frame,'x',1);
-                
+
             elseif pat_type == 2
                 % Pattern_###_PX_###_LEFT_(h/v_grt/flk,blank)_RIGHT_(...).mat
                 pattern_str = ['windowed_' noise_str '_' px_str '_FULL_' pattern_combination_str{pattern_combinations(pat_comb_row,3)}];
-                
+
                 % Loop until both of the sides have completed
                 clear Pats
                 for x = 1:size(pat.full,3);
                     Pats(:,:,x,1) = dummy_frame;
                     Pats(horiz,full_cols,x,1) = pat.full(horiz,full_cols,x);
                 end
-                
+
                 % Add noise to the dummy frame as well.
                 Pats = add_dummy_frame_to_pattern(Pats,dummy_frame,'x',1);                
             end
-            
+
             % deal with the noise 
             num_pat_inds = num_rows*num_cols;
             if noise_level ~= 1
@@ -263,7 +263,6 @@ for stripe_size = stripe_sizes %Stripe sizes 30,60 degs
             num_frames_str = ['NUM_FRAMES_' pad_num2str_w_zeros(size(Pats,3),3) '_'];
             pattern_str = [num_frames_str pattern_str];
             count = save_make_panelsV3_pattern(Pats,row_compression,gs_val,pattern_str,save_directory,count,testing_flag);
-        
         end
     end
 end

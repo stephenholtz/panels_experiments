@@ -1,7 +1,8 @@
 % Make all of the position functions for the simple looping stimuli
 % these have to make sense for dummy frame patterns everything will
 % be in the x channel.
-%
+%#ok<*SAGROW>
+
 save_directory = mfilename('fullpath');
 save_directory = fileparts(save_directory);
 

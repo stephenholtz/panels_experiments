@@ -1,12 +1,12 @@
 % metadata for the experiment folder
 
 % Transgene metadata
-metadata.Line               = '25b02ad_48d11dbd'; %'gmr_42f06_ae_01';
+metadata.Line               = 'gmr_35a03ad_29g11dbd'; %
 metadata.Sex                = 'female'; % 'male' 'female'
-metadata.DoB                = '2013-06-04';
+metadata.DoB                = '2013-07-02';
 metadata.HeadGlued          = '0'; % '1' '0'
 metadata.Effector           = ''; % 'gal80ts_kir21' 'gal80ts_tnt'
-metadata.Indicator          = 'gcamp_6f_attp40'; % 'gcamp_6f_attp40'
+metadata.Indicator          = 'gcamp_6f_vk5'; % 'gcamp_6f_attp40'
 metadata.temp_unshift_time  = '0.0.0';% length of time unshifted in days.hours.mins
 metadata.temp_shift_time	= '0.0.0';
 metadata.temp_unshifted     = 25;
