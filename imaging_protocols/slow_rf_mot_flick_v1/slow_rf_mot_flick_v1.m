@@ -79,7 +79,7 @@ function [C,repetition_duration] = slow_rf_mot_flick_v1
         pat_num = pat_func_pairs(1,i);
         func_num = pat_func_pairs(2,i);
         
-        C.experiment(cond_num).DisplayType      = 'panels';
+        C.experiment(cond_num).DisplayType      = 'controller';
         C.experiment(cond_num).PatternID        = pat_num; %#ok<*AGROW>
         C.experiment(cond_num).PatternName      = patterns{pat_num};
         C.experiment(cond_num).Mode             = [4 0];

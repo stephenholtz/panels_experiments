@@ -34,7 +34,7 @@ row_compression = 0;
 % The gs value for the experiment
 gs_val = 3;
 mid_gs_value = 3;
-high_gs_value = 6;
+high_gs_value = 7;
 low_gs_value = 0;
 
 % Size of the arena
