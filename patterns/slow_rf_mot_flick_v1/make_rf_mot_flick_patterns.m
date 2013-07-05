@@ -28,7 +28,7 @@ pad_num2str_w_zeros = @(num,num_zeros)([repmat('0',1,num_zeros - numel(num2str(n
 
 % Save time while testing.
 testing_flag = 0;
-% Row compression is not necessary, all fit onto panels memory without it
+% Row compression is not necessary for all
 row_compression = 0;  
 
 % The gs value for the experiment
@@ -38,7 +38,6 @@ high_gs_value = 6;
 low_gs_value = 0;
 
 % Size of the arena
-num_rows = 32;
 num_cols = 96;
 
 % These are not symmetrical (only testing right, so let visual extent go into left side)
@@ -54,6 +53,8 @@ base_pattern_name = [grat_type '_'];
 
 sfs = [30 60 90];
 col_widths = sfs/(2*3.75);
+row_compression = 1;
+num_rows = 4;
 for col_width = col_widths
     clear Pats pat
     switch grat_type
@@ -69,7 +70,7 @@ for col_width = col_widths
     pat.dummy_frame = mid_gs_value*ones(num_rows,num_cols);
 
     if col_width == 4
-        base_wave = circshift(base_wave,[0 2]);    
+        base_wave = circshift(base_wave,[0 2]);
     elseif col_width == 8
         base_wave = circshift(base_wave,[0 0]);
     elseif col_width == 12
@@ -109,8 +110,6 @@ for pol = 1:2
             frg_val = low_gs_value;
             bkg_val = mid_gs_value;
     end
-    
-    dummy_frame = mid_gs_value*ones(num_rows,num_cols);
     stripe_size = 3;
     
     % Left, Right, Up, Down w/ 'Edges' and Stripes
@@ -118,6 +117,9 @@ for pol = 1:2
         clear Pats pat
         switch dir
             case 1
+                row_compression = 1;
+                num_rows = 4;
+                dummy_frame = mid_gs_value*ones(num_rows,num_cols);
                 dir_str = 'prog';
                 bar_str = 'edge';
                 frame = 1;
@@ -130,6 +132,9 @@ for pol = 1:2
                     Pats(:,left_cols,frame) = dummy_frame(:,left_cols);
                 end
             case 2
+                row_compression = 1;
+                num_rows = 4;
+                dummy_frame = mid_gs_value*ones(num_rows,num_cols);
                 dir_str = 'reg';
                 bar_str = 'edge';
                 frame = 1;
@@ -142,6 +147,9 @@ for pol = 1:2
                     Pats(:,left_cols,frame) = dummy_frame(:,left_cols);
                 end
             case 3
+                row_compression = 0;
+                num_rows = 32;
+                dummy_frame = mid_gs_value*ones(num_rows,num_cols);
                 dir_str = 'down';
                 bar_str = 'edge';
                 frame = 1;
@@ -153,6 +161,9 @@ for pol = 1:2
                     Pats(:,left_cols,frame) = dummy_frame(:,left_cols);
                 end
             case 4
+                row_compression = 0;
+                num_rows = 32;
+                dummy_frame = mid_gs_value*ones(num_rows,num_cols);
                 dir_str = 'up';
                 bar_str = 'edge';
                 frame = 1;
@@ -164,6 +175,9 @@ for pol = 1:2
                     Pats(:,left_cols,frame) = dummy_frame(:,left_cols);
                 end
             case 5
+                row_compression = 1;
+                num_rows = 4;
+                dummy_frame = mid_gs_value*ones(num_rows,num_cols);
                 dir_str = 'prog';
                 bar_str = 'bar';
                 base_stripe_pat = [frg_val*ones(num_rows,stripe_size) bkg_val*ones(num_rows,num_cols-stripe_size)];
@@ -176,6 +190,9 @@ for pol = 1:2
                     Pats(:,left_cols,frame) = dummy_frame(:,left_cols);
                 end
             case 6
+                row_compression = 1;
+                num_rows = 4;
+                dummy_frame = mid_gs_value*ones(num_rows,num_cols);
                 dir_str = 'reg';
                 bar_str = 'bar';
                 base_stripe_pat = [bkg_val*ones(num_rows,num_cols-stripe_size) frg_val*ones(num_rows,stripe_size)];
@@ -188,6 +205,9 @@ for pol = 1:2
                     Pats(:,left_cols,frame) = dummy_frame(:,left_cols);
                 end
             case 7
+                row_compression = 0;
+                num_rows = 32;
+                dummy_frame = mid_gs_value*ones(num_rows,num_cols);
                 dir_str = 'down';
                 bar_str = 'bar';
                 base_stripe_pat = [frg_val*ones(stripe_size,num_cols); bkg_val*ones(num_rows,num_cols)];
@@ -201,6 +221,9 @@ for pol = 1:2
                     Pats(:,left_cols,frame) = dummy_frame(:,left_cols);
                 end
             case 8
+                row_compression = 0;
+                num_rows = 32;
+                dummy_frame = mid_gs_value*ones(num_rows,num_cols);
                 dir_str = 'up';
                 bar_str = 'bar';
                 base_stripe_pat = [bkg_val*ones(num_rows,num_cols); frg_val*ones(stripe_size,num_cols)];
@@ -227,6 +250,8 @@ end
 
 %==Make full field flicker stimuli and  partial field flicker stimuli======
 % Working - !
+row_compression = 1;
+num_rows = 4;
 for pol = 1:2
     switch pol
         case 1
@@ -249,29 +274,29 @@ for pol = 1:2
             case 1
                 % 'full' field
                 flicker_cols = [49:96];
-                flicker_rows = [1:32];
+                flicker_rows = [1:4];
                 quad_str = 'full_right';
             case 2
                 % 'Quad I/Upper Right'
                 flicker_cols = [73:96];
-                flicker_rows = [1:16];
+                flicker_rows = [1:2];
                 quad_str = 'quad1_right';
                 
             case 3
                 % 'Quad II/Upper Left'
                 flicker_cols = [49:72];
-                flicker_rows = [1:16];
+                flicker_rows = [1:2];
                 quad_str = 'quad2_right';
                 
             case 4
                 % 'Quad III/Bottom Left'
                 flicker_cols = [49:72];
-                flicker_rows = [17:32];
+                flicker_rows = [3:4];
                 quad_str = 'quad3_right';
             case 5
                 % 'Quad IV/Bottom Right'
                 flicker_cols = [73:96];
-                flicker_rows = [17:32];
+                flicker_rows = [3:4];
                 quad_str = 'quad4_right';
         end
         n_pix = numel(flicker_cols)*numel(flicker_rows);

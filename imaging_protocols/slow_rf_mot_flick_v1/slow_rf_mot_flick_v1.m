@@ -47,7 +47,7 @@ function [C,repetition_duration] = slow_rf_mot_flick_v1
         
         for pat_num = pat_nums
             for func_num = func_nums % all of the edge speeds (position functions)
-                C.experiment(cond_num).DisplayType      = 'panels';
+                C.experiment(cond_num).DisplayType      = 'controller';
                 C.experiment(cond_num).PatternID        = pat_num; %#ok<*AGROW>
                 C.experiment(cond_num).PatternName      = patterns{pat_num};
                 C.experiment(cond_num).Mode             = [4 0];
