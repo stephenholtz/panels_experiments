@@ -7,11 +7,12 @@ spatial_freq = 12;
 temp_freq_list = speeds/spatial_freq;
 dummy_frame_flag = 1;
 func_iter = 1;
+use_max_samp_rate = 0;
 
 for temp_freq = temp_freq_list            
     for direction = [-1 1]
 
-        [func,pos_func_samp_freq] = make_determine_best_simple_looping_position_functions(spatial_freq,temp_freq,direction,dummy_frame_flag);
+        [func,pos_func_samp_freq] = make_determine_best_samp_rate_simple_looping_position_functions(spatial_freq,temp_freq,direction,dummy_frame_flag,use_max_samp_rate);
         
         if mod(temp_freq,1)
             temp_freq_name = regexprep(num2str(temp_freq),'\.','pt');
