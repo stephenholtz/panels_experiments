@@ -1,12 +1,12 @@
 %%-'slow_rf_mot_flick_v1'-------------------------------------------------------
 initial_time    = 20; % 20 seconds before any stims (with the laser on)
 inter_dur       = 4;  % 4 seconds between stimuli for baseline/aftereffect calcs
-num_reps        = 4;  % 5 based on flicker resp consistency this a good #
+num_reps        = 5;  % 5 based on flicker resp consistency this a good #
 
 total_conds = 0;
 
-% Monocular motion (should start with the least number of edges 'on screen')
-directions  = 2; % pos / neg / up / down
+% Monocular motion (just to see if it is worth doing a full set of this)
+directions  = 2; % pos / neg
 spat_freqs  = 3; % 30 60 90
 temp_freqs  = 2; % .25 .5;
 duration    = 6; % at least 4 seconds (to get a full sweep for all conditions)
